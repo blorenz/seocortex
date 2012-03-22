@@ -1,0 +1,5 @@
+Modules needing to be refactored :
+    google_crawler.py
+     - Most if it should be good, but still review it
+    proxied_requests.py
+     - Accept proxies from database or other sources, rather than being hardcoded 
