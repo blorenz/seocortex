@@ -13,6 +13,7 @@ class GoogleQueryer(object):
     url_format = "%s/%s"
     mode = 'search'
     timeout = 10
+    start = 0
     
     def __init__(self, language = None, mode = None):
         self.language = language or self.language
@@ -26,12 +27,16 @@ class GoogleQueryer(object):
         params = {
             'hl' : self.language,
             'q' : query,
+            'start' : self.start,
         }
         return params
         
     def get_timeout(self):
         return self.timeout
     
+    def next(self):
+        self.start += 10
+
     def is_response_valid(self):
         return self.response.ok
     
