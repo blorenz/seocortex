@@ -34,6 +34,7 @@ class GoogleQueryer(object):
     def get_timeout(self):
         return self.timeout
     
+    # next() increments the start result number by 10, effectively paging the results
     def next(self):
         self.start += 10
 
@@ -87,7 +88,12 @@ class GoogleSearchParser(object):
                 continue
         
             page = {}
-            t = result.findSelect('h3 a')[0]
+
+            # Skip if not an organic result
+            if not result.findSelect('.vsc > h3 a'):
+                continue
+
+            t = result.findSelect('.vsc > h3 a')[0]
             d = result.find("div", { "class" : "s" })
             is_youtube = self.is_youtube(result)
             
@@ -117,7 +123,7 @@ class GoogleSearchParser(object):
                 'raw_url' : raw_url,
                 'url' : url,
                 'total_search_results' : total,
-                'rank_in_google' : i,
+                'rank_in_google' : i + self.start,
             }
             i += 1
             pages.append(page)

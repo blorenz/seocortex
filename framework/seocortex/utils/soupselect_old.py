@@ -1,5 +1,23 @@
+# -*-coding:Utf-8 -* 
+# Copyright 2012 - Peoplze.com <contact@peoplze.com>
+
 # Python imports
 import re
+
+
+def attrInNode(node,atr):
+    for k,val in node.attrs:
+        if k == atr:
+            return True
+    return False
+
+
+def htmlFind(node,selector,n,defaut=""):
+    l = list(node.findSelect(selector))
+    if len(l) > n:
+        return l[n].text
+    else:
+        return defaut
 
 tag_re = re.compile('^[a-z0-9]+$')
 
@@ -37,6 +55,10 @@ def attribute_checker(operator, attribute, value=''):
     }.get(operator, lambda el: el.has_key(attribute))
 
 
+def has_attr(soup, attr_name):
+    return attr_name in soup._getAttrMap()
+    
+    
 def select(soup, selector):
     """
     soup should be a BeautifulSoup instance; selector is a CSS selector 
@@ -44,11 +66,7 @@ def select(soup, selector):
     """
     tokens = selector.split()
     current_context = [soup]
-    for index, token in enumerate(tokens):
-        if tokens[index - 1] == '>':
-            # already found direct descendants in last step
-            continue
-
+    for token in tokens:
         m = attribselect_re.match(token)
         if m:
             # Attribute selector
@@ -61,7 +79,6 @@ def select(soup, selector):
                 found.extend([el for el in context.findAll(tag) if checker(el)])
             current_context = found
             continue
-
         if '#' in token:
             # ID selector
             tag, id = token.split('#', 1)
@@ -72,7 +89,6 @@ def select(soup, selector):
                 return [] # No match
             current_context = [el]
             continue
-
         if '.' in token:
             # Class selector
             tag, klass = token.split('.', 1)
@@ -89,7 +105,6 @@ def select(soup, selector):
                 )
             current_context = found
             continue
-
         if token == '*':
             # Star selector
             found = []
@@ -97,19 +112,6 @@ def select(soup, selector):
                 found.extend(context.findAll(True))
             current_context = found
             continue
-
-        if token == '>':
-            # Child selector
-            tag = tokens[index + 1]
-            if not tag:
-                tag = True
-
-            found = []
-            for context in current_context:
-                found.extend(context.findAll(tag, recursive=False))
-            current_context = found
-            continue
-
         # Here we should just have a regular tag
         if not tag_re.match(token):
             return []
@@ -119,16 +121,14 @@ def select(soup, selector):
         current_context = found
     return current_context
 
-def has_attr(soup, attr_name):
-    return attr_name in soup._getAttrMap()
-
 def monkeypatch(BeautifulSoupClass=None):
     """
     If you don't explicitly state the class to patch, defaults to the most 
     common import location for BeautifulSoup.
     """
+    if not BeautifulSoupClass:
         # Je patch Tag, parce que c'est plus pratique a mon avis
-    from BeautifulSoup import Tag as BeautifulSoupClass
+        from BeautifulSoup import Tag as BeautifulSoupClass
     BeautifulSoupClass.findSelect = select
     BeautifulSoupClass.has_attr = has_attr
     
@@ -139,4 +139,6 @@ def unmonkeypatch(BeautifulSoupClass=None):
     delattr(BeautifulSoupClass, 'findSelect')
     delattr(BeautifulSoupClass, 'has_attr')
 
+
+# Monkeypatch on import
 monkeypatch()
