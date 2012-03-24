@@ -13,7 +13,7 @@ class BaseHarvestor(object):
         self.current_footprints = footprints
         self.results = {}
 
-    def harvest(self, keyword):
+    def harvest(self, keyword, DEBUG=False):
         for engine in self.supported_engines:
             builder_name = "%s_query" % engine
             runner_name = "%s_run" % engine
@@ -28,6 +28,11 @@ class BaseHarvestor(object):
             response = query_runner(query)
             result = query_parser(response)
             self.results[engine] = result
+            if DEBUG:
+                print "[DEBUG] keyword: " + keyword
+                print "[DEBUG] query: " + query
+                print "[DEBUG] engine: " + engine
+
         return self.results
 
 

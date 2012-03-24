@@ -15,5 +15,5 @@ if __name__ == '__main__':
     custom_footprints = ['"Top Commenter" OR "Top Commenters"']
     harv = Harvestor(custom_footprints)
 
-    res = harv.harvest('cooking')
+    res = harv.harvest('cooking',DEBUG=True)
     print res
