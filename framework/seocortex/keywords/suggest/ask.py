@@ -4,7 +4,7 @@ import json
 
 
 class Suggestor(object):
-    name = 'Yahoo'
+    name = 'Ask'
 
     def build_request(self, keyword):
         params = {

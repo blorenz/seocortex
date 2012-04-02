@@ -1,0 +1,17 @@
+HEAD /playlist?list=PL5DD82A19E260B4A9 HTTP/1.0
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*
+User-Agent: Mozilla/4.0 (compatible; ICS)
+Host: www.youtube.com
+
+HTTP/1.0 200 OK
+Date: Sat, 24 Mar 2012 12:50:25 GMT
+Server: Apache
+X-Content-Type-Options: nosniff
+Set-Cookie: use_hitbox=d5c5516c3379125f43aa0d495d100d6ddAEAAAAw; path=/; domain=.youtube.com
+Set-Cookie: VISITOR_INFO1_LIVE=kjrWIiugcpM; path=/; domain=.youtube.com; expires=Mon, 19-Nov-2012 12:50:25 GMT
+Expires: Tue, 27 Apr 1971 19:44:06 EST
+Cache-Control: no-cache
+P3P: CP="This is not a P3P policy! See //support.google.com/accounts/bin/answer.py?answer=151657&hl=en-US for more info."
+X-Frame-Options: SAMEORIGIN
+Content-Type: text/html; charset=utf-8
+

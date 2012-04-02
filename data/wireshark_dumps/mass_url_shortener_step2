@@ -1,0 +1,13 @@
+GET /api.php?longurl=http%3A%2F%2Fwww%2Esongkick%2Ecom%2Fartists%2F2955211%2Dfuntcase HTTP/1.0
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*
+User-Agent: Mozilla/4.0 (compatible; ICS)
+Host: is.gd
+
+HTTP/1.1 200 OK
+Server: nginx
+Date: Sat, 24 Mar 2012 15:28:46 GMT
+Content-Type: text/html; charset=UTF-8
+Connection: close
+X-Powered-By: PHP/5.2.17
+
+http://is.gd/f1Afr1

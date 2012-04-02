@@ -1,0 +1,3 @@
+Idea:  Newsletter mailer program (some inspiration from aweber.com)
+
+Objective:  To support capture of opt-in email addresses; provide ability to unsubscribe; email a list; no frontend for users; schedule email deliverables;

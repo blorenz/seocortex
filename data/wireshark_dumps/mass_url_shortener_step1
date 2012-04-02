@@ -1,0 +1,14 @@
+GET /api-create.php?url=http%3A%2F%2Fwww%2Esongkick%2Ecom%2Fartists%2F2955211%2Dfuntcase HTTP/1.0
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*
+User-Agent: Mozilla/4.0 (compatible; ICS)
+Host: tinyurl.com
+
+HTTP/1.0 200 OK
+X-Powered-By: PHP/5.3.9
+Content-type: text/plain
+Content-Length: 26
+Connection: close
+Date: Sat, 24 Mar 2012 14:38:46 GMT
+Server: TinyURL/1.6
+
+http://tinyurl.com/7tluwd6

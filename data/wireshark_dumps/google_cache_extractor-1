@@ -1,0 +1,149 @@
+GET /search?q=cache:http://www.songkick.com/images/1281306&hl=en&strip=1 HTTP/1.0
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*
+Connection: Keep-Alive
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3
+Host: webcache.googleusercontent.com
+
+HTTP/1.0 200 OK
+Content-Type: text/html; charset=UTF-8
+Date: Sat, 24 Mar 2012 13:18:15 GMT
+Expires: -1
+Cache-Control: private, max-age=0
+Server: gws
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: SAMEORIGIN
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<base href="http://www.songkick.com/images/1281306"><div style="background:#fff;border:1px solid #999;margin:-1px -1px 0;padding:0;"><div style="background:#ddd;border:1px solid #999;color:#000;font:13px arial,sans-serif;font-weight:normal;margin:12px;padding:8px;text-align:left">This is Google&#39;s cache of <a href="http://www.songkick.com/images/1281306" style="text-decoration:underline;color:#00c">http://www.songkick.com/images/1281306</a>. It is a snapshot of the page as it appeared on Mar 18, 2012 03:14:08 GMT. The <a href="http://www.songkick.com/images/1281306" style="text-decoration:underline;color:#00c">current page</a> could have changed in the meantime. <a href="http://www.google.com/intl/en/help/features_list.html#cached" style="text-decoration:underline;color:#00c">Learn more</a><br><br><div style="float:right"><a href="http://webcache.googleusercontent.com/search?q=cache:http://www.songkick.com/images/1281306&amp;hl=en&strip=0" style="text-decoration:underline;color:#00c">Full version</a></div>
+<div>&nbsp;</div></div></div><div style="position:relative">
+
+<html lang="en" xmlns:og="http://opengraphprotocol.org/schema/"  xmlns:fb="http://www.facebook.com/2008/fbml">
+  <head>
+    <title>Funtcase | Photo | Songkick</title>
+    
+    
+      
+    
+    <meta name="description" content="Photo of Funtcase on Songkick.">
+    <meta property="fb:app_id" content="308540029359">
+    
+    
+    
+    <!--[if IE 7]>
+      <link href="http://www2.sk-static.com/stylesheets/bundles/media-show-ie7.min.c1873f1.css?20120316162713" media="screen,projection" rel="stylesheet" type="text/css" />
+    <![endif]-->
+    <!--[if IE 8]>
+      <link href="http://www1.sk-static.com/stylesheets/bundles/media-show-ie8.min.e5a8cc3.css?20120316162713" media="screen,projection" rel="stylesheet" type="text/css" />
+    <![endif]-->
+    
+    
+  </head>
+
+  <body>
+    
+
+
+
+
+
+
+
+
+
+    <div class="header">
+  <a href="/" id="logo">Songkick</a>
+  <ul>
+    <li><a href="http://help.songkick.com/">We ♥ feedback</a></li>
+    
+      <li><a href="/signup" class="signup-link signup-source" data-signup-source="Everything else">Sign up</a></li>
+      <li><a href="/session/new?cancel_url=%2Fimages%2F1281306&amp;success_url=%2Fimages%2F1281306">Log in</a></li>
+    
+    <li class="site-search">
+        
+        
+        </li>
+  </ul>
+</div>
+
+    <div id="navigation">
+  <ul>
+        <li class="meta">
+          <a href="/signup" class="signup-source traking-button" data-signup-source="Start tracking bands - shoulder">Start tracking bands</a>
+        </li><li class="nav home">
+      <a href="/">Home</a>
+    </li><li class="nav events">
+      <a href="/metro_areas/26330-us-sf-bay-area">SF Bay Area concerts</a>
+      <a href="/session/filter_metro_area" rel="modal">(Change&nbsp;location)</a>
+    </li>
+  </ul>
+  
+</div>
+
+    <div id="page">
+      <div class="primary col">
+  
+    <div class="component image">
+      Funtcase live
+    </div>
+  
+</div>
+<div class="secondary col">
+  <h2>Funtcase</h2>
+  <p class="attribution">
+    Source: <a href="http://last.fm/">Last.fm</a>
+    
+      &copy; All rights reserved.
+    
+  </p>
+  
+</div>
+
+
+    </div>
+    <div id="footer" >
+  <ul>
+    <li><a href="/blog">Blog</a></li>
+    <li><a href="/info/about">About us</a></li>
+    <li><a href="/info/team">Team</a></li>
+    <li><a href="/info/jobs">Jobs</a></li>
+    <li><a href="/developer">API &amp; Partners</a></li>
+  
+  </ul>
+
+  <ul>
+    <li><a href="http://help.songkick.com/">Help &amp; FAQ</a></li>
+    <li><a href="/info/guidelines">Community guidelines</a></li>
+    <li><a href="/info/terms">Terms of use</a></li>
+    <li><a href="/info/privacy">Privacy policy</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a rel="modal" href="/events/new">Add an event</a></li>
+  </ul>
+  <p>Similar artists powered by <a href="http://www.last.fm/" target="_blank">last.fm</a> Copyright © 2012 Songkick.com, Inc. All rights reserved.</p>
+</div>
+
+    
+  <div class="sticky-footer component">
+    <p class="facebook">
+      Track your favorite artists and never miss them live.
+      <a class="facebook-connect" data-success-url="/">Sign up</a>
+    </p>
+    <a class="close">close</a>
+  </div>
+
+    <div id="fb-root"></div>
+
+
+
+
+
+
+
+
+    
+    
+  </body>
+</html>
+

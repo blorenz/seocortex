@@ -1,0 +1,3 @@
+Idea: Leverage ffmpeg to create videos for SEO
+
+Objective: 

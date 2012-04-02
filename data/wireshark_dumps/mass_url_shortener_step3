@@ -1,0 +1,19 @@
+GET /cortas/encode.pl?u=http%3A%2F%2Fwww%2Esongkick%2Ecom%2Fimages%2F1281306&r=xml HTTP/1.0
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*
+User-Agent: Mozilla/4.0 (compatible; ICS)
+Host: www.soitu.es
+
+HTTP/1.1 301 Moved Permanently
+Server: nginx/0.8.27 zanganeando.com/0.6.2.2
+Date: Sat, 24 Mar 2012 14:38:46 GMT
+Content-Type: text/html
+Connection: close
+Location: http://cortas.elpais.com/encode.pl?u=http%3A%2F%2Fwww%2Esongkick%2Ecom%2Fimages%2F1281306&r=xml
+Set-Cookie: uid=vChH109t3HZxT2j7FMFUAg==#6360ccca123293b3f495ab5c7d35b532; expires=Fri, 14-Mar-14 14:38:46 GMT; domain=.soitu.es; path=/; httponly
+P3P: CP="CUR ADM OUR IND STA NID"
+
+<html>
+<head><title>301 Moved Permanently</title></head>
+<body bgcolor="white"><div id="pxlhddncntrl" style="display:none"><script language="Javascript" type="text/javascript">var rndPXL=parseInt(Math.random()*10000000);var imgMMD=new Image(1,1);imgMMD.src="/pxlctl.gif?"+rndPXL;</script><noscript><img src="/pxlctl.gif" width="1" height="1" alt="" /></noscript><script language="Javascript" type="text/javascript" src="/js/comun/comun.js"></script><script type="text/javascript"> var _gaq = _gaq || []; _gaq.push(["_setAccount", "UA-2760358-1"]); _gaq.push(["_trackPageview"]); (function() { var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = true; ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s); })(); </script></div><div id="pxlhddncntrl" style="display:none"><script<hr><center>nginx/0.8.27 zanganeando.com/0.6.2.2</center>
+</body>
+</html>

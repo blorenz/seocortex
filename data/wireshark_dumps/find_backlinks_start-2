@@ -1,0 +1,25 @@
+GET /data?cli=10&dat=nsa&ver=quirk-searchstatus&uid=111111&userip=192.168.0.1&url=buzzfb.info HTTP/1.0
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*
+User-Agent: Mozilla/4.0 (compatible; ICS)
+Host: xml.alexa.com
+
+HTTP/1.1 200 OK
+Content-type: text/xml
+Set-cookie: tbver=quirk-searchsta; domain=.alexa.com; path=/; expires=Mon Mar 26 12:56:13 2012
+Content-Length: 318
+Connection: Close
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ALEXA VER="0.9" URL="buzzfb.info/" HOME="0" AID="=">
+<RLS PREFIX="http://" more="0">
+</RLS>
+<SD TITLE="A" FLAGS="" HOST="buzzfb.info">
+<LINKSIN NUM="30"/>
+</SD>
+<SD>
+<POPULARITY URL="buzzfb.info/" TEXT="2037190"/>
+<REACH RANK="1608085"/>
+<RANK DELTA="-8490"/>
+</SD>
+</ALEXA>

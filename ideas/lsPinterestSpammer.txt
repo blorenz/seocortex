@@ -1,0 +1,21 @@
+Pinterest Spammer
+
+Objective: Quick 'n dirty replication of what Pinterest spammers are doing.
+
+Resource Dependencies:  
+            Proxies
+            Single Pinterest account
+            Part of seocortex
+            Amazon affiliate account
+            Email creator for gmail & yahoo
+
+Flow:
+    1. Acquire a single Pinterest account (Anonymously create this via VPS or proxy) (manually done)
+    2. Generate invites to create new accounts
+    3. Auto-confirm accounts
+        - Create profiles and upload pictures/female names
+    4. Create human-behavior by auto-following based on keywords (keyword fixtures will be provided for each account, probably should control the velocity of this)
+    5. Post pins of product images with affiliate links built in (URL-shorten these based on wireshark_dumps/mass_url_shortener)
+        - Get products via Amazon RSS feeds based on search --- like "mp3 player"
+    6. Repost the most popular pins
+        - Check Pinterest for popular pins and repin with our affiliate links inserted.

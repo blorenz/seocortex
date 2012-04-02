@@ -1,0 +1,58 @@
+GET /tbr?client=navclient-auto&ch=6288412156&ie=UTF-8&features=Rank&q=info:http%3A%2F%2Fwww%2Efuntasticus%2Ecom%2F2008%2F03%2F24%2Fadvertising%2Dvs%2Dreality%2Da%2Dproduct%2Dcomparison%2Dproject%2F HTTP/1.0
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*
+Referer: http://www.funtasticus.com
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; pl; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3
+Host: toolbarqueries.google.com
+
+HTTP/1.0 200 OK
+Date: Sat, 24 Mar 2012 12:25:29 GMT
+Pragma: no-cache
+Expires: Fri, 01 Jan 1990 00:00:00 GMT
+Cache-Control: no-cache, must-revalidate
+Content-Type: text/html; charset=ISO-8859-1
+Set-Cookie: PREF=ID=885a11c087f9d7d8:FF=0:TM=1332591929:LM=1332591929:S=B1Z4PDDcnDi12mW1; expires=Mon, 24-Mar-2014 12:25:29 GMT; path=/; domain=.google.com
+Server: gws
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: SAMEORIGIN
+
+Rank_1:1:3
+
+
+GET /tbr?client=navclient-auto&ch=61937518051&ie=UTF-8&features=Rank&q=info:http%3A%2F%2Fwww%2Eohanaware%2Ecom%2F HTTP/1.0
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*
+Referer: http://www.ohanaware.com
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30)
+Host: toolbarqueries.google.com
+
+HTTP/1.0 200 OK
+Date: Sat, 24 Mar 2012 12:25:27 GMT
+Pragma: no-cache
+Expires: Fri, 01 Jan 1990 00:00:00 GMT
+Cache-Control: no-cache, must-revalidate
+Content-Type: text/html; charset=ISO-8859-1
+Set-Cookie: PREF=ID=eda7d91fabdf1b3b:FF=0:TM=1332591927:LM=1332591927:S=tT-gRme-weUzsXUY; expires=Mon, 24-Mar-2014 12:25:27 GMT; path=/; domain=.google.com
+Server: gws
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: SAMEORIGIN
+
+Rank_1:1:3
+
+
+GET /tbr?client=navclient-auto&ch=61095255213&ie=UTF-8&features=Rank&q=info:http%3A%2F%2Ffuntasticplaycenters%2Ecom%2Flocations%2Ehtml HTTP/1.0
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*
+Referer: http://funtasticplaycenters.com
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; pl; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3
+Host: toolbarqueries.google.com
+
+HTTP/1.0 200 OK
+Date: Sat, 24 Mar 2012 12:25:21 GMT
+Pragma: no-cache
+Expires: Fri, 01 Jan 1990 00:00:00 GMT
+Cache-Control: no-cache, must-revalidate
+Content-Type: text/html; charset=ISO-8859-1
+Set-Cookie: PREF=ID=bf27c7a220e45c4e:FF=0:TM=1332591921:LM=1332591921:S=DtOlTQZgZVd6y2p8; expires=Mon, 24-Mar-2014 12:25:21 GMT; path=/; domain=.google.com
+Server: gws
+X-XSS-Protection: 1; mode=block
+X-Frame-Options: SAMEORIGIN
+
+Rank_1:1:2

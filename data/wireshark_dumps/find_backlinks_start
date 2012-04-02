@@ -1,0 +1,25 @@
+GET /data?cli=10&dat=nsa&ver=quirk-searchstatus&uid=111111&userip=192.168.0.1&url=tejbz.com HTTP/1.0
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*
+User-Agent: Mozilla/4.0 (compatible; ICS)
+Host: xml.alexa.com
+
+HTTP/1.1 200 OK
+Content-type: text/xml
+Set-cookie: tbver=quirk-searchsta; domain=.alexa.com; path=/; expires=Mon Mar 26 12:56:12 2012
+Content-Length: 315
+Connection: Close
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ALEXA VER="0.9" URL="tejbz.com/" HOME="0" AID="=">
+<RLS PREFIX="http://" more="0">
+</RLS>
+<SD TITLE="A" FLAGS="" HOST="tejbz.com">
+<LINKSIN NUM="50"/>
+</SD>
+<SD>
+<POPULARITY URL="tejbz.com/" TEXT="4491032"/>
+<REACH RANK="4052593"/>
+<RANK DELTA="+2555586"/>
+</SD>
+</ALEXA>

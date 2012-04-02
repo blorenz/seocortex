@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <name>Macro</name>
+  <shortname>macro</shortname>
+  <summary>A Mono Application</summary>
+  <version>1.0</version>
+  <url />
+  <license>Proprietary</license>
+  <type>Winexe</type>
+  <description>A Mono Application</description>
+  <createdesktopfile>false</createdesktopfile>
+  <icon />
+  <categories />
+  <group>Productivity/Other</group>
+  <needsprepopulate>false</needsprepopulate>
+  <dependencies />
+  <provides />
+  <filetree name="Application Root" writable="false">
+    <directories>
+      <directory name="bin" writable="false">
+        <directories>
+          <directory name="Debug" writable="false">
+            <directories />
+            <files>
+              <file name="Macro.exe" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\bin\Debug\Macro.exe" startup="false" writeable="false" />
+              <file name="Macro.exe.config" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\bin\Debug\Macro.exe.config" startup="false" writeable="false" />
+              <file name="Macro.exe.mdb" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\bin\Debug\Macro.exe.mdb" startup="false" writeable="false" />
+              <file name="Macro.pdb" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\bin\Debug\Macro.pdb" startup="false" writeable="false" />
+              <file name="Macro.vshost.exe" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\bin\Debug\Macro.vshost.exe" startup="false" writeable="false" />
+              <file name="Macro.vshost.exe.manifest" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\bin\Debug\Macro.vshost.exe.manifest" startup="false" writeable="false" />
+            </files>
+          </directory>
+          <directory name="Release" writable="false">
+            <directories />
+            <files>
+              <file name="Macro.exe" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\bin\Release\Macro.exe" startup="false" writeable="false" />
+              <file name="Macro.pdb" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\bin\Release\Macro.pdb" startup="false" writeable="false" />
+            </files>
+          </directory>
+        </directories>
+        <files />
+      </directory>
+      <directory name="obj" writable="false">
+        <directories>
+          <directory name="x86" writable="false">
+            <directories>
+              <directory name="Debug" writable="false">
+                <directories>
+                  <directory name="TempPE" writable="false">
+                    <directories />
+                    <files>
+                      <file name="Properties.Resources.Designer.cs.dll" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\TempPE\Properties.Resources.Designer.cs.dll" startup="false" writeable="false" />
+                    </files>
+                  </directory>
+                </directories>
+                <files>
+                  <file name="DesignTimeResolveAssemblyReferences.cache" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\DesignTimeResolveAssemblyReferences.cache" startup="false" writeable="false" />
+                  <file name="DesignTimeResolveAssemblyReferencesInput.cache" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\DesignTimeResolveAssemblyReferencesInput.cache" startup="false" writeable="false" />
+                  <file name="GenerateResource.read.1.tlog" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\GenerateResource.read.1.tlog" startup="false" writeable="false" />
+                  <file name="GenerateResource.write.1.tlog" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\GenerateResource.write.1.tlog" startup="false" writeable="false" />
+                  <file name="Macro.APropos.resources" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\Macro.APropos.resources" startup="false" writeable="false" />
+                  <file name="Macro.csproj.FileListAbsolute.txt" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\Macro.csproj.FileListAbsolute.txt" startup="false" writeable="false" />
+                  <file name="Macro.exe" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\Macro.exe" startup="false" writeable="false" />
+                  <file name="Macro.Hotmailer.resources" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\Macro.Hotmailer.resources" startup="false" writeable="false" />
+                  <file name="Macro.Macro.resources" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\Macro.Macro.resources" startup="false" writeable="false" />
+                  <file name="Macro.pdb" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\Macro.pdb" startup="false" writeable="false" />
+                  <file name="Macro.Properties.Resources.resources" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\Macro.Properties.Resources.resources" startup="false" writeable="false" />
+                  <file name="ResGen.read.1.tlog" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\ResGen.read.1.tlog" startup="false" writeable="false" />
+                  <file name="ResGen.write.1.tlog" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\ResGen.write.1.tlog" startup="false" writeable="false" />
+                  <file name="ResolveAssemblyReference.cache" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Debug\ResolveAssemblyReference.cache" startup="false" writeable="false" />
+                </files>
+              </directory>
+              <directory name="Release" writable="false">
+                <directories>
+                  <directory name="TempPE" writable="false">
+                    <directories />
+                    <files>
+                      <file name="Properties.Resources.Designer.cs.dll" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Release\TempPE\Properties.Resources.Designer.cs.dll" startup="false" writeable="false" />
+                    </files>
+                  </directory>
+                </directories>
+                <files>
+                  <file name="DesignTimeResolveAssemblyReferences.cache" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Release\DesignTimeResolveAssemblyReferences.cache" startup="false" writeable="false" />
+                  <file name="DesignTimeResolveAssemblyReferencesInput.cache" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Release\DesignTimeResolveAssemblyReferencesInput.cache" startup="false" writeable="false" />
+                  <file name="GenerateResource.read.1.tlog" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Release\GenerateResource.read.1.tlog" startup="false" writeable="false" />
+                  <file name="GenerateResource.write.1.tlog" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Release\GenerateResource.write.1.tlog" startup="false" writeable="false" />
+                  <file name="Macro.APropos.resources" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Release\Macro.APropos.resources" startup="false" writeable="false" />
+                  <file name="Macro.csproj.FileListAbsolute.txt" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Release\Macro.csproj.FileListAbsolute.txt" startup="false" writeable="false" />
+                  <file name="Macro.exe" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Release\Macro.exe" startup="false" writeable="false" />
+                  <file name="Macro.Hotmailer.resources" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Release\Macro.Hotmailer.resources" startup="false" writeable="false" />
+                  <file name="Macro.Macro.resources" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Release\Macro.Macro.resources" startup="false" writeable="false" />
+                  <file name="Macro.pdb" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Release\Macro.pdb" startup="false" writeable="false" />
+                  <file name="Macro.Properties.Resources.resources" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Release\Macro.Properties.Resources.resources" startup="false" writeable="false" />
+                  <file name="ResolveAssemblyReference.cache" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\obj\x86\Release\ResolveAssemblyReference.cache" startup="false" writeable="false" />
+                </files>
+              </directory>
+            </directories>
+            <files />
+          </directory>
+        </directories>
+        <files />
+      </directory>
+      <directory name="Properties" writable="false">
+        <directories />
+        <files>
+          <file name="AssemblyInfo.cs" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\Properties\AssemblyInfo.cs" startup="false" writeable="false" />
+          <file name="Resources.Designer.cs" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\Properties\Resources.Designer.cs" startup="false" writeable="false" />
+          <file name="Resources.resx" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\Properties\Resources.resx" startup="false" writeable="false" />
+          <file name="Settings.Designer.cs" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\Properties\Settings.Designer.cs" startup="false" writeable="false" />
+          <file name="Settings.settings" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\Properties\Settings.settings" startup="false" writeable="false" />
+        </files>
+      </directory>
+    </directories>
+    <files>
+      <file name="app.config" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\app.config" startup="false" writeable="false" />
+      <file name="APropos.cs" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\APropos.cs" startup="false" writeable="false" />
+      <file name="APropos.Designer.cs" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\APropos.Designer.cs" startup="false" writeable="false" />
+      <file name="APropos.resx" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\APropos.resx" startup="false" writeable="false" />
+      <file name="at.ico" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\at.ico" startup="false" writeable="false" />
+      <file name="Hotmailer.cs" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\Hotmailer.cs" startup="true" writeable="false" />
+      <file name="Hotmailer.Designer.cs" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\Hotmailer.Designer.cs" startup="false" writeable="false" />
+      <file name="Hotmailer.resx" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\Hotmailer.resx" startup="false" writeable="false" />
+      <file name="Macro.cs" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\Macro.cs" startup="false" writeable="false" />
+      <file name="Macro.csproj" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\Macro.csproj" startup="false" writeable="false" />
+      <file name="Macro.csproj.user" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\Macro.csproj.user" startup="false" writeable="false" />
+      <file name="Macro.Designer.cs" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\Macro.Designer.cs" startup="false" writeable="false" />
+      <file name="Macro.resx" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\Macro.resx" startup="false" writeable="false" />
+      <file name="Program.cs" source="C:\Users\Bambell\Desktop\New folder (15)\Inboxer_Macro_6\Macro\Macro\Program.cs" startup="false" writeable="false" />
+    </files>
+  </filetree>
+  <autogeneraterelease>true</autogeneraterelease>
+  <release />
+  <preinstallscript />
+  <postinstallscript />
+  <preuninstallscript />
+  <postuninstallscript />
+  <useiomap>true</useiomap>
+  <minimummono>2.4.2</minimummono>
+  <leaveonserver>false</leaveonserver>
+  <serverlocation />
+  <targetplatform>monorpm</targetplatform>
+</package>

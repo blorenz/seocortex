@@ -1,0 +1,133 @@
+Brandon > Hey I am in a meeting but can use this to chat secretly. Just edit it and I will refresh it.
+it looks like i am taking notes on the meeting
+
+
+Aaron > Ok, I was just saying that the alexa scraper already has the feature you entered a TODO for
+check the constructor of the UrlGenerator, it accepts a variable called "start_page"
+
+So that can be used for crawling ranges
+
+
+Brandon > Gotcha.. Sorry I missed that.   I was just evaluating the code today to learn from it.  I think we need a quick backlink counter though.
+
+Aaron > Yep we do. I'll code that tonight fetching the XML and parsing it. It's easy to do,
+and it gives us other interesting metrics. But for checking batches of alexa ranks I would used prescraped data, since it will be a lot, lot faster. Just one simple lookup in memcached.
+
+Brandon >  Sweet, great architecture!  I think the next logical thing would be work on the poster.  don't you?
+
+Aaron > Yes, sorry I was away. The next logicial thing is indeed the comment poster.
+
+Brandon > No problem!  This works great for asynchronous chatting when speed of delivery isn't of the most value.  Are we using proxies now?
+
+Aaron > Yes I agree, it works fairly well. We have hard coded proxies 
+in the seocortex.utils.proxied_requests module, as I explained before, it wraps the requests API with
+proxies balanced out with random distribution, we might have to change that, I'm using the same proxies we're using for IFN right now, but we can buy some of our own, they're relatively cheap.
+
+Brandon > Great! I noticed that you started with urllib in the alexa_backlinks.  I was wondering what that was about
+
+Aaron > No, that was just for testing we'll have to write a full fledged fetching system and give it some thought scalability wise.
+It was only 2 short lines for testing with urllib and we didn't need proxy support for that.
+
+Brandon > Ok, next question:  What server will we support this on?  I imagine we will need to harness RabbitMQ, Celery, and the other applications that you listed.  It would be awesome to start crafting around this.  We'll tie in a Django 1.4 installation ( possibly using this as the install template that 1.4 now supports: https://github.com/xenith/django-base-template ) and then work on a Bootstrap frontend.  But the focus is still on the backend now.  We need to support the scalability and responsiveness, so we should be integrating on a configured server.
+
+Aaron > Yeah we need to be scalable and responsive. Server wise I would start off with an OVH (based in Europe) quad-core 16gb of Ram, 2TB of storage dedicated server.
+And then scale by adding some into a cluster, it's either that or we go cloud, but given what we're doing I think we should probably stay on dedicated servers for now.
+
+As for a Data store, I think we should stay with MySQL and denormalize when convenient, MongoDB is ok, easy to setup and use, but it's very ressource hungry compared to MySQL for a similar dataset. We can decide on that together though if you have some arguments, but I've got relatively good experience with MongoDB, and write-concurrency isn't brilliant, since it has collection level write locks.
+
+RabbitMQ and Celery are very easy to setup, it would take me about 10-15mn to have it configured and running.
+
+
+Brandon >  I have heard you talk about OVH before.  Check this: http://www.hetzner.de/en/hosting/produkte_rootserver/ex4s   That seems like a very good deal.
+
+As for a data store, I completely agree.  Let's keep Django on a baseline with its out-of-the-box support for SQL databases with no hackety-hacks to support NoSQL.  We can leverage MongoDB via pymongo or whatever on a module level, but let Django do it's django with SQL.
+
+I currently am not funded to bootstrap a new server.  Unless you got resources to support that or we could piggyback off of what we have.  I have very minimal servers (512 mb RAM.. egad!!!!  Fixed bandwidth.)
+
+Aaron > I would go with OVH www.kimsufi.com/fr/, for the same price as above you get 24gb of ram, 
+I really doubt storage will be a problem so we don't need 6tb (as above), the OVH servers have 2tb
+which is more than enough for now. And on top they have no setup see (it's free), and you can have a server in an hour's time
+The one at 40 euros costs about 60$ or so, I've had a hard time finding better, and I think OVH is
+reliable, they have a good record as a company, and I haven't had any problems with them, over
+the course of the last few years.
+
+For Django I completely agree, we use Django without the ORM and MongoDB everywhere else, using our 
+custom ORM, simply because we don't want to be Django dependant, and a lot of our code is totally 
+unrelated to the web frontend, so we just use Django for templating, views, and localization really.
+
+Server wise, 512mb is no way near enough ram, we can use my IFN server, which is farely under used ressource wise, and already running, with near zero downtime, it's been months since I've rebooted MySQL,
+or even the webserver.
+
+WebServer wise, I like Cherokee, it does it's job pretty well, maybe not as fast as nginx for serving 
+static files, but it's still fast, and it has a nice, easy to use Admin UI, I don't mind editing text 
+config files, but I don't think it should be necessary in our day and age for relatively simple tasks,
+it supports wsgi through uwsgi, which I have no problems setting up and configuring.
+
+Brandon >  Agreed about everything but the last issue.  I like nginx.  I like the ability to define with configuration files.  It uses string comparison or regex for routing.  I use FastCGI as a proxy for PHP processing, if we had to support that (doubtfully).  I do a proxy forward to gunicorn_django for Django routed files.  I have a very simple, working conf to establish the forward proxy, and a static_backend on another port for js,css,etc.  I don't think Admin UIs are as flexible as I would like to be.  I promise it won't be bad.
+
+Aaron > Sure I get your point, I like nginx too, but give Cherokee a shot and you'll see it's pretty good, they used to have text based config, but now have deprected it in favour of the web ui.
+It takes literally two minutes to setup PHP proxied through fastcgi, with Cherokee, using php-fpm, and 
+the same for Django using wsgi. You can easily define virtual servers, reverse proxies, redirects, all 
+different kinds of setups, and it's cleaner in my opinion than a text based file, performance wise, 
+cherokee does do well (check out a few benchmarks), trust me having setup a few dozen different sites 
+using either PHP (with fastcgi) or Django (with WSGI). You don't have to take my word for it, I think 
+cherokee suits the job, though I do agree tghat I may not beat nginx for baremetal high loads, but it 
+deals with it pretty well anyway.
+
+Brandon > Cherokee it is.  The webserver is the least of my worries and something we will hardly ever touch.
+
+Ok.  If you find time to carve out space for this and set me up an account, we can move from dropbox to server implementation (still with the focus of the backend modules that support the functionality.)   Once we get the comment poster accomplished, we can plumb some workflows and do some tests (we'll define some .py files that we will execute from command line).  How does this sound?
+
+Aaron > Yep that's what we'll do. I agree the webserver is "unimportant" as long as it works, and that's why cherokee is good, no hassle, and it just works.
+My Dropbox account is already syncing on the server so we can continue doing everything in Dropbox.
+
+The very django that's setup in the Dropbox is running in Cherokee using uwsgi at http://cortex.ifnseo.com/
+
+So there's very little to do, the only thing that needs to be setup is our Celery config
+since RabbitMQ and memcached are already up and running on the server.
+
+Brandon > Ok, that is incredibly useful that is is being incorporated on the server via DB.  I will need some kind of account on there because it will become a limitation of architecture here since I won't have Celery/memcached/etc available.  When do you propose we begin the comment poster?
+
+Aaron > Yep it is indeed very useful for quick development. I can setup and manage Celery and memcached.
+You will obviously need an account or we'll have to do some setup.
+
+I hope you understand though, that I can't share all my source code with you.
+
+So I'll have to isolate it in some why, if you don't mind. It would be best if would talk about this in real time later tonight.
+
+I have to go eat now, but anyway we'll find a solution. It's ok
+
+################################################################################
+###################### Sep #####################################################
+################################################################################
+
+Aaron > I'm back. Are you available ?
+
+
+Aaron > Hey Brandon, I'm up, and would like to take a shot a comment posting tonight so we have at 
+least the "gory details" covered. I'm going to do something with my brother I'll be back soon.
+So hopefully we'll cover all this then.
+
+
+################################################################################
+###################### Sep : Today is March 29 #################################
+################################################################################
+
+Brandon > Hey Aaron, are ya here?
+
+Aaron > Yep, I'm going to eat now, I'll be back in roughly 30mn
+
+Brandon > Ok, great!  I put something in the ideas folder that would be a 2-3 days project.  Pinterest spamming.  It's lucrative until they shut it down.  Most people use a WSO bot.  We can do this with Python of course.  I know it is a detour, but would be fast cash generation.  It may not (or may) hold up over the long term.  Just getting a bankroll.  Let me know what you think.
+
+Aaron > Yeah, as long as it's doable I'm in, I have to go somewhere with my mum, I'll contact you as soon as I'm back
+
+Brandon > Awesome!!  I got this sort of figured out.  Get an amazon affiliate account http://affiliate-program.amazon.com
+          It is my belief that this window of opportunity will exist for some time.  I'll fill you in with what I know tonight, around 8 my time.  but I will will chat with you on here until I leave in 3.5 hours
+
+Aaron > I'm back. It seems interesting, I remember porting someones's email checker from .Net to Linux and Mono, a while back. He had thousands of Yahoo email accounts, and was to automize some spamming process that he needed to automize, sending and checking emails through the Yahoo interface. Porting his existing software wasn't possible due to some functions that weren't implemented in Mono, but I was able to hack in some javascript equivalents, and then some where impossible to replicate in JS.
+I don't know if his thing is still running, but I did have credentials to access it, and that would give us a lot of emails and passwords.
+
+I'll chat to you later in real time :)
+
+
+
