@@ -25,60 +25,36 @@ DBCRequest.prototype.send = function(callback) {
     var password = this.password;
     var startURL = page.evaluate(function(){ return document.baseURI; });
 
-
     // Flow
     mstep.Step(
         // Setup page
-        function() {
-            console.log("Setting up form");
-            try {
-                page.injectJs('../common/jquery.js');
-                page.injectJs('../common/dbc_form.js');
-                page.uploadFile('#dbc_file', _this.filename);            
-            } catch(error) {
-                console.log("DBCRequest Error - Setting up form :"+error);
-                phantom.exit();
-            }
-            return page;
+        function setupPage() {
+            page.injectJs('../common/jquery.js');
+            page.injectJs('../common/dbc_form.js');
+            page.uploadFile('#dbc_file', _this.filename);        
+            return null;
         },
         // Start file upload
-        function(_page) {
+        function startUpload() {
             var mdata = {
-                username : _this.username,
-                password : _this.password
+                username : username,
+                password : password,
             };
-            console.log("Submitting form");
-            try {            
-                page.evaluate(function(data) {
-                    $('#dbc_username').val(data.username);
-                    $('#dbc_password').val(data.password);
-                    $('form').submit();    
-                },
-                    JSON.stringify(mdata)
-                );      
-            } catch(error) {
-                console.log("DBCRequest Error - Submitting Form : "+error);
-                phantom.exit();
-            }
+            // Wait till page load to trigger next flow state
+            var that = this;
+            var f = function(status) { that(status); };
+            page.onLoadFinished = f;
+            page.evaluate(function(data) {
+                $('#dbc_username').val(data.username);
+                $('#dbc_password').val(data.password);
+                $('form').submit();
+            },
+                JSON.stringify(mdata)
+            );
         },
-        // Wait till upload is submitted
-        function() {
-            console.log("Polling");
-            try {
-                mutils.waitFor(function () {
-                    // Check if URL has changed
-                    var newURL = page.evaluate(function(){ return document.baseURI; });
-                    return newURL != startURL;
-                }, function() {},10000);
-                return page;
-            } catch(error) {
-                console.log("DBCRequest Error - Polling : "+error);
-                phantom.exit();
-            }
-        },
-        // Run callback
-        function(current_page) {
-            callback(current_page);
+        function doCallback(status) {
+            callback(page);
+            return null;
         }
     );
 }

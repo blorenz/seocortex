@@ -36,7 +36,7 @@ function Step() {
     if (steps.length === 0) {
       // Throw uncaught errors
       if (arguments[0]) {
-        throw arguments[0];
+        //throw arguments[0];
       }
       return;
     }
@@ -61,10 +61,7 @@ function Step() {
     } else if (result !== undefined) {
       // If a synchronous return is used, pass it to the callback
       next(undefined, result);
-    } else {
-      // If synchronous but no result returned
-      next(undefined, undefined);
-    }
+    } 
     lock = false;
   }
 

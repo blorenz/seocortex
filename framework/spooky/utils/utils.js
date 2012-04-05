@@ -72,7 +72,7 @@ var randomString = function(lenght, charset) {
 
     var result = '';
     for (var i=0; i < length; i++) {
-        randomstring += charset[randomInt(charset.length)];
+        result += charset[randomInt(charset.length)];
     }
 
     return result;

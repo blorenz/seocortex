@@ -1,6 +1,29 @@
 // Includes
 var mstep = require('spooky/sync/step');
 
+
+// Utility function
+function isCaptchaValid(captcha) {
+    return (captcha ? captcha.length > 0 : false);
+}
+
+
+// Loop body of captcha extractor
+function extractCaptcha(page) {
+    page.injectJs('../common/jquery.js');
+    var query = page.evaluate(function() { return $('pre').text(); });
+    var re = /text=(.*)\&/;
+    var captcha = re.exec(query)[1];
+    var is_valid = isCaptchaValid(captcha);
+
+    if(is_valid) {
+        return captcha;
+    }
+    // Else
+    return null;
+}
+
+
 // Constructor
 function DCBResponse(page) {
     this.page = page;
@@ -16,31 +39,40 @@ DCBResponse.prototype.getResult = function(callback) {
     var tester = new WebPage();
     var captcha = null;
 
+
     mstep.Step(
         // Now poll Death By Captcha for the result
-        function() {
-            waitFor(function() {
-                tester.onLoadFinished = function() {
-                    tester.injectJs('../common/jquery.js');
-                    query = tester.evaluate(function() { return $('pre').text(); });
-                    var re = /text=(.*)\&/;
-                    captcha = re.exec(query)[1];
-                };
-
-                tester.open(poll);
-                    return (captcha ? captcha.length > 0 : false); 
-
-                },
+        function openTester() {
+            var that = this;
+            var lock = true;
+            var f = function(arg) { that(arg); }
+            tester.onLoadFinished = function() { lock = false; };
+            tester.onLoadStarted = function() { lock = true; };
+            tester.open(poll);
+            mutils.waitFor(
+                // Test if ready
                 function() {
-                    console.log("Finished parsing response");
+                    if(lock) {
+                        return false;
+                    }
+                    captcha = extractCaptcha(tester);
+                    if(captcha) {
+                        return true;
+                    }
+                    // else
+                    tester.open(poll);
+                    return false;
+
                 },
-                60000,
-                3000);
-            return captcha;
+                // On ready
+                f,
+                // Timeout, tick
+                60000, 3000
+            );
         },
-        // Run callback
-        function(result) {
-            callback(result);
+        function doCallback() {
+            callback(captcha);
+            return null;
         }
     );
 }

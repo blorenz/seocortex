@@ -63,8 +63,37 @@ Server.prototype.map_url = function(request, response) {
     return false;
 }
 
+Server.prototype.parse_request = function(request) {
+    var dict = {};
+    var url_parts = request.url.split("?");
+    if(url_parts.length === 1) {
+        return request;
+    }
+    // Handle incorrect query strings
+    try {
+        var query_string = url_parts[1];
+        var vars = query_string.split('&');
+        for(i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            var key = decodeURIComponent(pair[0]);
+            var value = decodeURIComponent(pair[1]);
+            dict[key] = value;
+        }
+    } catch(error) {
+        dict = {};
+    }
+
+    // Add GET
+    request.GET = dict;
+
+    return request;
+}
+
 Server.prototype.handle_request = function(request, response) {
     var server = Server.prototype.handle_request._server;
+
+    // Adds info such as GET
+    request = server.parse_request(request);
 
     var mapped = true;
     try {
