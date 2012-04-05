@@ -1,6 +1,6 @@
 // Includes
 var mutils = require('spooky/utils/utils');
-var mfetcher = requrie('spooky/io/fetcher');
+var mfetcher = require('spooky/io/fetcher');
 
 
 // Consts
@@ -31,7 +31,7 @@ var PROXIES = [
 // Quick utility function
 var getRandomProxy = function() {
     var maxindex = PROXIES.length - 1;
-    var index = multils.randomInt(maxindex);
+    var index = mutils.randomInt(maxindex);
     return PROXIES[index];
 }
 

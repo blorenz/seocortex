@@ -29,8 +29,8 @@ DBCRequest.prototype.send = function(callback) {
     mstep.Step(
         // Setup page
         function setupPage() {
-            page.injectJs('../common/jquery.js');
-            page.injectJs('../common/dbc_form.js');
+            page.injectJs('web_js/joker/jquery.js');
+            page.injectJs('web_js/joker/dbc_form.js');
             page.uploadFile('#dbc_file', _this.filename);        
             return null;
         },

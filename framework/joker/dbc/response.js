@@ -1,4 +1,5 @@
 // Includes
+var mutils = require('spooky/utils/utils');
 var mstep = require('spooky/sync/step');
 
 
@@ -10,7 +11,7 @@ function isCaptchaValid(captcha) {
 
 // Loop body of captcha extractor
 function extractCaptcha(page) {
-    page.injectJs('../common/jquery.js');
+    page.injectJs('web_js/jquery.js');
     var query = page.evaluate(function() { return $('pre').text(); });
     var re = /text=(.*)\&/;
     var captcha = re.exec(query)[1];
@@ -32,13 +33,12 @@ function DCBResponse(page) {
 
 DCBResponse.prototype.getResult = function(callback) {
 
-    this.page.injectJs('../common/jquery.js');
+    this.page.injectJs('web_js/jquery.js');
     var poll = this.page.evaluate(function() { return document.baseURI; });
     var query = this.page.evaluate(function() { return $('pre').text(); });
 
     var tester = new WebPage();
     var captcha = null;
-
 
     mstep.Step(
         // Now poll Death By Captcha for the result
@@ -65,7 +65,7 @@ DCBResponse.prototype.getResult = function(callback) {
 
                 },
                 // On ready
-                f,
+                that,
                 // Timeout, tick
                 60000, 3000
             );

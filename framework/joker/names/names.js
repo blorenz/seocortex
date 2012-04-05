@@ -12,41 +12,42 @@ function random_from(listnames) {
     return listnames[index];
 }
 
-function random_male() {
+function randomMale() {
     return random_from(mmale.names);
 }
 
-function random_female() {
+function randomFemale() {
     return random_from(mfemale.names);
 }
 
-function random_first() {
+function randomFirst() {
     var is_male = Math.random() % 2;
-    return is_male ? random_male() : random_female();
+    return is_male ? randomMale() : randomFemale();
 }
 
-function random_last() {
+function randomLast() {
     return random_from(mlast.names);
 }
 
-function random_city() {
+function randomCity() {
     return random_from(mcities.cities);
 }
 
-function random_animal() {
+function randomAnimal() {
     return random_from(manimals.animals);
 }
 
-function random_name() {
-    var first = random_first();
-    var last = random_last();
+function randomName() {
+    var first = randomFirst();
+    var last = randomLast();
     return first+" "+last;
 }
 
 // Exports
-exports.random = random_name
-exports.random_male = random_male
-exports.random_female = random_female
-exports.random_first = random_first
-exports.random_last = random_last
-exports.random_city = random_city
+exports.random = randomName
+exports.randomName = randomName
+exports.randomMale = randomMale
+exports.randomFemale = randomFemale
+exports.randomFirst = randomFirst
+exports.randomLast = randomLast
+exports.randomCity = randomCity

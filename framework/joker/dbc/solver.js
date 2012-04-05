@@ -73,7 +73,7 @@ DBCSolver.prototype.solveData = function(image_data, callback) {
 
 
 // Fetch url, and solve for data
-DBCSolver.prototype.solveURL = function(url, callback, ofilename) {
+DBCSolver.prototype.solveURL = function(url, callback) {
     var _this = this;
     // TODO proxy support
     var page = new WebPage();
@@ -83,13 +83,15 @@ DBCSolver.prototype.solveURL = function(url, callback, ofilename) {
     mstep.Step(
         // Fetch content
         function fetchContent() {
-            var bthis = this;
-            var f = function(arg) { bthis(arg); }
+            var that = this;
+            var f = function(arg) { that(arg); }
             page.open(url, f);
         },
         function parseContent(status) {
             if(status !== 'success') {
-                console.log("Failure loading page : "+status);
+                var turl = page.evaluate(function() { return document.baseURI; });
+
+                console.log("Failure loading page : "+status+" ("+url+").");
                 return null;
             }
             return null;
@@ -99,6 +101,7 @@ DBCSolver.prototype.solveURL = function(url, callback, ofilename) {
             filename = page !== null ? mfile.randomTempFile() : null;
             if(filename) {
                 filename += ".png";
+                console.log("filename = "+filename);
                 page.render(filename);
             }
             return null;

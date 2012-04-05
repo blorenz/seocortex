@@ -1,6 +1,10 @@
 // Includes
 var mutils = require('spooky/utils/utils');
 
+// Consts
+var DEFAULT_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20";
+
+
 // Constructor
 function Fetcher(url, proxy, proxy_auth, proxy_type, preserve_page) {
     this.proxy = proxy;
@@ -13,6 +17,12 @@ function Fetcher(url, proxy, proxy_auth, proxy_type, preserve_page) {
 
 Fetcher.prototype.buildPage = function () {
     this.page = this.page && this.preserve_page ? this.page : new WebPage();
+
+    // Change User-Agent
+    this.page.settings.userAgent = DEFAULT_USER_AGENT;
+
+
+    // Setup Proxy
     if(this.proxy)
     {
         this.page.setProxyType(this.proxy_type);
@@ -38,29 +48,6 @@ Fetcher.prototype.fetch = function(url, callback) {
         }
     });
 }
-
-Fetcher.prototype.blockingFetch = function(url) {
-    var ready = false;
-    var failed = false;
-
-    // Gernerate request
-    this.fetch(url, function(status) {
-        if(status !== 'success') {
-            failed = true;
-        }
-        ready = true;
-    });
-
-    // Block here
-    mutils.waitFor(function() {
-        return ready;
-    },
-    function() {
-
-    })
-    return failed ? null : this.page;
-}
-
 
 Fetcher.prototype.onFetch = function(status) {
     // Inherit to customize
