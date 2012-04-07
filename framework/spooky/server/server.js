@@ -40,7 +40,7 @@ Server.prototype.handler_404 = function(request, response) {
 }
 
 Server.prototype.map_url = function(request, response) {
-    map = this._urlmap;
+    var map = this._urlmap;
     for(var regexstr in map)
     {
         var regex = new RegExp(regexstr);
@@ -48,7 +48,7 @@ Server.prototype.map_url = function(request, response) {
         if(regex.test(request.url))
         {
             // Successfuly mapped
-            view = map[regexstr];
+            var view = new map[regexstr]();
             if(view instanceof views.BaseView)
             {
                 view.dispatch(request, response);

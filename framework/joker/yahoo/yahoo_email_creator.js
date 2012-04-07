@@ -209,7 +209,6 @@ YahooAccountBuilder.prototype.run = function(callback) {
             console.log('Success');
         else
             console.log('Failure');
-        phantom.exit();
 
     }
     
