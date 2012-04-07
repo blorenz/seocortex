@@ -19,18 +19,22 @@ function YahooAccountBuilder() {
     this.page.viewportSize = { width: 1080, height: 1000 };
     this.user_account = maccount.buildRandomAccount();
 
+    this.pageBefore = function() { this.page.onLoadFinished = null };
     // Keep track of progress
     this.failed = false;
+    _this = this;
 }
 
 
 
 // Methods
 YahooAccountBuilder.prototype.loadHomepage = function(callback) {
+    this.pageBefore();
     this.page.open(URL_HOMEPAGE, callback);
 }
 
 YahooAccountBuilder.prototype.loadSignup = function(callback) {
+    this.pageBefore();
     this.page.open(URL_SIGNUP, callback);
 }
 
@@ -68,18 +72,21 @@ YahooAccountBuilder.prototype.extractCaptchaURL = function() {
 
 
 YahooAccountBuilder.prototype.fillInPage = function(callback) {
-    var _this = this;
-    var json = JSON.stringify(this.user_account);
+    console.log(_this);
+    //_this.page.render('/var/www/html/stickybur.com/phantomjs/eeestit.png');
+    var json = JSON.stringify(_this.user_account);
+    console.log(json);
     var baseuriprof = null;
-    var theUri = page.evaluate(function () { return document.baseURI;  });
+    theUri = _this.page.evaluate(function () { return document.baseURI;  });
 
+    _this.formCallback = callback;
     this.injectJquery();
     // Fomm in all the data
-    var response = this.page.evaluate(function(user) {
+    var response = _this.page.evaluate(function(user) {
         $('#firstname').val(user.firstname);
-        $('#secondname').val(user.secondname);
+        $('#secondname').val(user.lastname);
         $('#gender option[value="m"]').attr("selected", "selected");
-        $('#birthdategroup option[value="4"]').attr("selected", "selected");
+        $('#birthdategroup option[value="'+user.birthmonth+'"]').attr("selected", "selected");
         $('#dd').val(user.birthday);
         $('#yyyy').val(user.birthyear);
         $('#country option[value="us"]').attr("selected", "selected");
@@ -100,88 +107,126 @@ YahooAccountBuilder.prototype.fillInPage = function(callback) {
         json
     );
   
-    this.page.onLoadFinished = null;
+    _this.page.onLoadFinished = null;
+    mutils.spinFor(_this.formWait,3000);
+}
+
+YahooAccountBuilder.prototype.formWait = function() {
     mutils.waitFor( function() {
         baseuriprof = _this.page.evaluate(function () {
             // Monitoring
            //console.log(document.baseURI);
            return [document.baseURI,document.querySelector('#regConfirmBody') ? 1 : 0]; 
            });
-        return (baseuriprof[0] != theUri) || baseuriprof[1];},
-    callback, 10000);
+        // Checks to see if the baseURI changes or finds the account successful
+    /*    console.log('* START @*@#**')
+        console.log(theUri);
+        console.log(baseuriprof[0]);
+        console.log(baseuriprof[1]);
+        console.log(_this.captchaErrorMsg());
+        console.log('* END @*@#**') */
+        return (baseuriprof[0] != _this.theUri) || baseuriprof[1] || _this.captchaErrorMsg();},
+    _this.formCallback, 10000);
 }
 
 
-YahooAccountBuilder.prototype.run = function(account, callback) {
+YahooAccountBuilder.prototype.run = function(callback) {
     // Pass useraccount
-    this.user_account = account ? account : this.user_account;
-    var _this = this;
+    //this.user_account = account ? account : this.user_account;
     var captcha_url = this;
     var captcha_result = null;
 
-    mstep.Step(
-        // Go to homepage
-        function loadHomepage() {
-            var that = this;
-            var f = function(value) { that(value); }
-            console.log("Loading homepage")
-            _this.loadHomepage(f);
-        },
-        // Now load signup page
-        function loadSignup() {
-            var that = this;
-            console.log("Loading signup")
-            _this.loadSignup(that);
-        },
-        // We need to wait for captcha to load, this isn't perfect, but does the job
-        function waitForCaptcha() {
-            // Wait 3 seconds
-            mutils.spinFor(this, 3000);
-        },
-        // Get captcha
-        function getCaptcha() {
-            captcha_url = _this.extractCaptchaURL();
-            return null;
-        },
-        function solveCaptcha() {
-            var that = this;
-            console.log("Solving captcha =  "+captcha_url);
-            var solver = new msolver.DBCSolver();
-            solver.solveURL(captcha_url, function(answer){
-                console.log("ANSWER = "+answer);
-                captcha_result = answer;
-                that();
-            });
-        },
-        function enterCaptcha() {
-            console.log("CAPTCHA = "+captcha_result);
-            _this.fillCaptcha(captcha_result);
-            return null;
-        },
-        // Fills in form and submits it
-        function fillFormSubit() {
-            _this.fillInPage(this);
-        },
-        function finalize() {
-            var errmsg = _this.captchaErrorMsg();
+    // Go to homepage
+    var loadHomepage = function() {
+        var that = this;
+        console.log("Loading homepage")
+        console.log(JSON.stringify(_this.user_account));
+        _this.loadHomepage(loadSignup);
+    }
+    // Now load signup page
+    var loadSignup = function() {
+        console.log("Loading signup")
+        _this.loadSignup(waitForCaptcha);
+    }
+    // We need to wait for captcha to load, this isn't perfect, but does the job
+    var waitForCaptcha = function() {
+        // Wait 3 seconds
+        mutils.spinFor(getCaptcha, 3000);
+    }
+    // Get captcha
+    var getCaptcha = function() {
+        captcha_url = _this.extractCaptchaURL();
+        solveCaptcha(captcha_url);
+    }
 
-            // Sucess
-            if(!errormsg) {
-                return null;
-            }
-            // Failure -> loop
-            //_this.run(callback);
-            _this.failed = true;
-            return null;
-        },
-        function doCallback() {
-            var value = _this.failed ? null : _this.user_account;
-            callback(value);
-            return null;
+    var solveCaptcha = function(captcha_url) {
+        console.log("Solving captcha =  "+captcha_url);
+        var solver = new msolver.DBCSolver();
+        solver.solveURL(captcha_url, function(answer){
+            console.log("ANSWER = "+answer);
+            captcha_result = answer;
+            enterCaptcha(captcha_result);
+        });
+    }
+    
+    var enterCaptcha = function(captcha_result) {
+        console.log("CAPTCHA = "+captcha_result);
+        _this.fillCaptcha(captcha_result);
+        fillFormSubmit();
+    }
+    
+    // Fills in form and submits it
+    var fillFormSubmit = function() {
+        console.log('Fill it out');
+        _this.fillInPage(isCaptchaSuccessful);
+    }
+
+    var isCaptchaSuccessful = function() {
+        var msg = _this.captchaErrorMsg();
+
+        if (msg && msg.length > 0) {
+            console.log('Wait for captcha');
+            console.log(msg);
+
+            waitForCaptcha();
         }
-    );
+        else {
+            console.log('going to the end!!');
+            finalize();
+        }
+
+    }
+
+    var finalize = function() {
+        // Sucess
+       var url = 'http://ifnseo.com:8088/yahoo/add?jsondata=' + encodeURIComponent(JSON.stringify(_this.user_account)); 
+           console.log(url);
+        require('webpage').create().open(url, theEnd);
+    }
+
+    var theEnd = function(success) {
+        if (success)
+            console.log('Success');
+        else
+            console.log('Failure');
+        phantom.exit();
+
+    }
+    
+    var doCallback = function() {
+        var value = _this.failed ? null : _this.user_account;
+        callback(value);
+        return null;
+    }
+
+
+    loadHomepage();
 }
 
-
+var exports = exports || {};
 // Exports
 exports.YahooAccountBuilder = YahooAccountBuilder
+
+
+//var testyab = new YahooAccountBuilder();
+//testyab.run();

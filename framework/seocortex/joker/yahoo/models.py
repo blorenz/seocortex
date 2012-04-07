@@ -15,6 +15,7 @@ class YahooAccount(models.Model):
 
     # Birth info
     birthday = models.DateField()
+    postalcode = models.CharField(max_length = 5)
 
 
     # Secret
@@ -29,7 +30,7 @@ class YahooAccount(models.Model):
 
     # After 3 invalid logins, accounts is considered as blocked
     def is_failed(self):
-        return fail_counts >= DEFAULT_FAIL_LIMIT
+        return self.fail_counts >= DEFAULT_FAIL_LIMIT
 
     @property
     def email(self):
@@ -38,6 +39,6 @@ class YahooAccount(models.Model):
     def __unicode__(self):
         return self.email
 
-    def save(*args, **kwargs):
+    def save(self, *args, **kwargs):
         self.is_active = self.is_failed()
         return super(YahooAccount, self).save(*args, **kwargs)

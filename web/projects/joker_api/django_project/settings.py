@@ -1,6 +1,20 @@
 # Django settings for django_project project.
+import os
+import sys
 
-DEBUG = True
+
+# Constants
+PROJECT_DIR = os.path.dirname(__file__)
+ROOT_DIR = os.path.abspath(os.path.join(PROJECT_DIR, *(3*(os.path.pardir,))))
+APP_DIRNAME = 'apps'
+APP_DIR = os.path.join(ROOT_DIR, APP_DIRNAME)
+
+
+# Add ROOT_DIR to python path
+sys.path.append(ROOT_DIR)
+
+
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -11,10 +25,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'seocortex',                      # Or path to database file if using sqlite3.
+        'USER': 'seocortex',                      # Not used with sqlite3.
+        'PASSWORD': 'scrtx5533',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -37,7 +51,7 @@ SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = True
+USE_I18N = False
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale
@@ -109,16 +123,8 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    # Joker API apps
+    'seocortex.joker.yahoo',
 )
 
 # A sample logging configuration. The only tangible logging

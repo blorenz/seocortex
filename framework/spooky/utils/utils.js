@@ -66,7 +66,7 @@ var randomInt = function(maxInt) {
 
 
 
-var randomString = function(lenght, charset) {
+var randomString = function(length, charset) {
     length = length ? length : DEFAULT_LENGTH;
     charset = charset ? charset : DEFAULT_CHARS;
 
@@ -78,6 +78,15 @@ var randomString = function(lenght, charset) {
     return result;
 }
 
+
+// requires jquery on the page!
+var clickOnPage = function(page,selector) {
+   var el = page.evaluate(function(sel) {
+               var offset = $(sel).offset(); 
+               return [offset.left,offset.top];
+   }, JSON.stringify(selector));
+   page.sendEvent('click',el[0],el[1]);
+};
 
 
 // Exports
