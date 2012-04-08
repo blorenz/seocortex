@@ -1,8 +1,7 @@
 // Includes
-var webserver, webpage, views;
-webserver = require('webserver');
-webpage = require('webpage');
-views = require('spooky/views/base')
+var webserver = require('webserver');
+var mutils= require('spooky/utils/utils');
+var views = require('spooky/views/base');
 
 
 var DEFAULT_PORT = 8086;
@@ -64,27 +63,9 @@ Server.prototype.map_url = function(request, response) {
 }
 
 Server.prototype.parse_request = function(request) {
-    var dict = {};
-    var url_parts = request.url.split("?");
-    if(url_parts.length === 1) {
-        return request;
-    }
-    // Handle incorrect query strings
-    try {
-        var query_string = url_parts[1];
-        var vars = query_string.split('&');
-        for(i = 0; i < vars.length; i++) {
-            var pair = vars[i].split("=");
-            var key = decodeURIComponent(pair[0]);
-            var value = decodeURIComponent(pair[1]);
-            dict[key] = value;
-        }
-    } catch(error) {
-        dict = {};
-    }
-
+    var query_string = mutils.parseURL(request.url).query_string;
     // Add GET
-    request.GET = dict;
+    request.GET = mutils.parseQS(query_string);
 
     return request;
 }

@@ -125,6 +125,7 @@ TEMPLATE_DIRS = (
 INSTALLED_APPS = (
     # Joker API apps
     'seocortex.joker.yahoo',
+    'seocortex.joker.twitter',
 )
 
 # A sample logging configuration. The only tangible logging

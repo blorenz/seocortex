@@ -26,24 +26,22 @@ DBCRequest.prototype.send = function(callback) {
     var startURL = page.evaluate(function(){ return document.baseURI; });
 
     // Flow
-    mstep.Step(
         // Setup page
-        function setupPage() {
+        var setupPage = function () {
             page.injectJs('web_js/joker/jquery.js');
             page.injectJs('web_js/joker/dbc_form.js');
             page.uploadFile('#dbc_file', _this.filename);        
-            return null;
-        },
+            startUpload();
+        }
         // Start file upload
-        function startUpload() {
+        var startUpload = function () {
+        
             var mdata = {
                 username : username,
                 password : password,
             };
             // Wait till page load to trigger next flow state
-            var that = this;
-            var f = function(status) { that(status); };
-            page.onLoadFinished = f;
+            page.onLoadFinished = null;
             page.evaluate(function(data) {
                 $('#dbc_username').val(data.username);
                 $('#dbc_password').val(data.password);
@@ -51,12 +49,23 @@ DBCRequest.prototype.send = function(callback) {
             },
                 JSON.stringify(mdata)
             );
-        },
-        function doCallback(status) {
-            callback(page);
-            return null;
+
+            // Wait until the submit reflects DBC JSON
+            mutils.waitFor(function() {
+                var newbase = page.evaluate(function() {
+                    return document.baseURI;
+                });
+                return newbase != startURL;
+            }, doCallback, 10000);
         }
-    );
+
+        var doCallback = function (status) {
+            callback(page);
+        }
+
+
+        setupPage();
+        
 }
 
 

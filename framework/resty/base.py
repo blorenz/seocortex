@@ -99,11 +99,11 @@ class BaseRestyServer(object):
         klass_obj = self.handlers.get(class_name, None)
 
         if not klass_obj:
-            return False
+            return None
 
         method = getattr(klass_obj, method_name, None)
         if not method:
-            return False
+            return None
 
         # Setup headers
         headers = getattr(klass_obj, 'HEADERS', {})
@@ -113,9 +113,15 @@ class BaseRestyServer(object):
         # Call method
         http_request = HttpRequest(request)
         kwargs = http_request.GET
-        response = method(**kwargs)
 
-        # Write response
+        # Custom renderer
+        renderer = getattr(klass_obj, '_render', None)
+        if renderer:
+            return renderer(request, method, kwargs)
+
+
+        # Default
+        response = method(**kwargs)
         request.send_reply(200, "OK", response)
         return True
 
@@ -128,18 +134,19 @@ class BaseRestyServer(object):
 
         # Nothing to be found
         if not(class_name or method_name):
-            self.handle_404(request)
-            return
+            return self.handle_404(request)
+            
 
-        matched = False
+        ret = None
         try:
-            matched = self.handle(request, class_name, method_name)
+            ret = self.handle(request, class_name, method_name)
         except Exception as e:
             return self.handle_500(request, e)
 
         # No match made
-        if not matched:
+        if not ret:
             return self.handle_404(request)
+        return ret
 
 
 

@@ -57,18 +57,18 @@ DBCSolver.prototype.solveData = function(image_data, callback) {
     }
 
     // Flow
-    mstep.Step(
         // Write file
-        function writeFile() {
+        var writeFile = function () {
             fs.write(filename, image_data, 'w');
-            return null;
-        },
+        };
+
         // Solve for data
-        function solveForData() {
+        var solveForData = function () {
             _this.solveFile(filename, callback);
-            return null;
-        }
-    );
+        };
+
+        writeFile();
+        solveForData();
 }
 
 

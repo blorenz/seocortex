@@ -79,6 +79,55 @@ var randomString = function(length, charset) {
 }
 
 
+var parseURL = function(url) {
+    var dict = {};
+    var url_parts = url.split('?');
+
+    // Query string
+    dict.url = url_parts[0];
+    dict.query_string = url_parts[1] ? url_parts : '';
+
+    // Protocol
+    var proto_parts = dict.url.split('://', 1)
+    proto_parts = proto_parts.length === 2 ? proto_parts : ['http', dict.url];
+    dict.protocol = proto_parts[0];
+    dict.full_path = proto_parts[1];
+
+    // Path
+    var path_parts = dict.full_path.split('/');
+    dict.domain = path_parts[0];
+    dict.path = path_parts.slice(1).join('/')
+
+    return dict;
+}
+
+
+
+// Parse a querystring to an object
+var parseQS = function(querystring) {
+    var dict = {};
+
+    // Handle incorrect query strings
+    try {
+        var vars = querystring.split('&');
+        for(i = 0; i < vars.length; i++) {
+            try {
+                    var pair = vars[i].split("=");
+                    var key = pair[0] ? pair[0] : undefined;
+                    var value = pair[1] ? pair[1] : '';
+                    key = decodeURIComponent(key);
+                    value = decodeURIComponent(value);
+                    dict[key] = value;                  
+            } catch(error) {
+                continue;
+            }
+        }
+    } catch(error) {
+        dict = {};
+    }
+    return dict;
+}
+
 // requires jquery on the page!
 var clickOnPage = function(page,selector) {
    var el = page.evaluate(function(sel) {
@@ -94,3 +143,6 @@ exports.waitFor = waitFor
 exports.spinFor = spinFor
 exports.randomInt = randomInt
 exports.randomString = randomString
+exports.clickOnPage = clickOnPage
+exports.parseQS = parseQS
+exports.parseURL = parseURL
