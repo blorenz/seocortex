@@ -13,7 +13,7 @@ class TwitterAccount(models.Model):
     password = models.CharField(max_length = 128)
 
     # Relation to our Yahoo Account
-    yahoo_account = models.ForeignKey(YahooAccount) 
+    yahoo_account = models.ForeignKey(YahooAccount, related_name = "twitter_account") 
 
 
     def __unicode__(self):

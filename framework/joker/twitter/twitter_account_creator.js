@@ -114,6 +114,7 @@ TwitterAccountCreator.prototype.run = function(callback) {
       
          page.onLoadFinished = null;
         mutils.waitFor( function() {
+            par.injectJquery();
             var baseuriprof = page.evaluate(function () {
                $('div.sign-up-box input').click();
                console.log(document.baseURI);
@@ -159,6 +160,7 @@ TwitterAccountCreator.prototype.run = function(callback) {
             console.log('par in fill is ' + par);
 
             mutils.waitForWithParam( function(newpar) {
+                newpar.injectJquery();
                 var baseuriprof = newpar.page.evaluate(function () {
                    $('div.sign-up-box input').click();
                     return document.baseURI;
@@ -181,7 +183,6 @@ TwitterAccountCreator.prototype.run = function(callback) {
     }
 
     var nextThing = function() {
-            par.page.render('/var/www/html/fewdalism.com/phantomjs/newbeg.png');
             par.injectJquery();
             var errormsg = par.page.evaluate(function () {
                 return $('#recaptcha_image').length;
@@ -191,6 +192,7 @@ TwitterAccountCreator.prototype.run = function(callback) {
                 twitterRecaptchaSolver();
             else{
                 console.log('Made it!');
+                par.page.render('/var/www/html/fewdalism.com/phantomjs/newbeg.png');
                 console.log(JSON.stringify(par.userAccount));
                 phantom.exit();}
         }

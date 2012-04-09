@@ -1,3 +1,6 @@
+# Python imports
+import json
+
 # Django imports
 from django.core import serializers
 
@@ -13,6 +16,13 @@ class YahooHandler(object):
     def list(self):
         data = serializers.serialize("json", YahooAccount.objects.order_by("-pk")[:5])
         return data
+
+    def get_by_twitter(self, has_twitter = False):
+        has_twitter = bool(has_twitter)
+        order_by = ("pk",)
+        filters = {"twitter_account__isnull" : not(has_twitter)}
+        l = YahooAccount.objects.filter(**filters).order_by(*order_by)[:1]
+        return serializers.serialize("json", l)
 
     def add(self, jsondata = None):
 
