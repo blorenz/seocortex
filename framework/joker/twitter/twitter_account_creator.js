@@ -14,14 +14,14 @@ var system = require('system');
 var URL_SIGNUP = 'http://www.twitter.com/signup';
 var DEBUG_MODE = true;
 
-function TwitterAccountCreator() {
+function TwitterAccountCreator(user_account) {
     this.fetcher = new mfetcher.ProxiedFetcher();
     this.fetcher.buildPage();
     this.page = this.fetcher.page;
     this.page.viewportSize = { width: 1080, height: 1000 };
     this.pageBefore = function() { this.page.onLoadFinished = null };
     
-    this.userAccount = new Object();
+    this.userAccount = user_account ? user_account : new Object();
     
     this.captcha_url = this;
     this.captcha_result = null;
@@ -255,21 +255,3 @@ var twitterRecaptchaSolver  = function() {
 var exports = exports || {};
 // Exports
 exports.TwitterAccountCreator = TwitterAccountCreator
-
-console.log('Beginning!');
-
-var cool = new TwitterAccountCreator();
-
-// Print usage message, if no address is passed
-if (system.args.length < 5) {
-    console.log("Usage: twitter_account_creator.js [email] [password] [full name] [username]"); 
-    phantom.exit(1);
-} else {
-    //address = Array.prototype.slice.call(system.args, 1).join(' ');
-    cool.userAccount.email = system.args[1]; 
-    cool.userAccount.password = system.args[2]; 
-    cool.userAccount.fullname = system.args[3]; 
-    cool.userAccount.username = system.args[4]; 
-}
-console.log('Trying');
-cool.run();
