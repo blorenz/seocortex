@@ -1,9 +1,13 @@
+console.log('Starting!');
 // Includes
+var mutils = require('spooky/utils/utils');
+var mfetcherreg = require('spooky/io/fetcher');
+var mfetcher = require('joker/utils/proxied_fetcher');
+
 var mdbc = require('joker/dbc/dbc');
 var mnames = require('joker/names/names');
 
-var page = require('webpage').create(),
-    system = require('system');
+var system = require('system');
 
 
 // Consts
@@ -12,9 +16,247 @@ var DEBUG_MODE = true;
 
 function TwitterAccountCreator() {
     this.fetcher = new mfetcher.ProxiedFetcher();
+    this.fetcher.buildPage();
+    this.page = this.fetcher.page;
+    this.page.viewportSize = { width: 1080, height: 1000 };
+    this.pageBefore = function() { this.page.onLoadFinished = null };
+    
     this.userAccount = new Object();
+    
+    this.captcha_url = this;
+    this.captcha_result = null;
+    this.newFetcher = null;
+    this.newpage = null;
 }
 
+
+
+
+//var done = false;
+// Fills out the signup page
+
+
+TwitterAccountCreator.prototype.injectJquery = function() {
+    this.page.injectJs('web_js/jquery.js');
+}
+
+TwitterAccountCreator.prototype.extractCaptchaURL = function() {
+    this.injectJquery();
+    // DEBUG
+    var captchaSrc = this.page.evaluate(function() {
+       return $('#recaptcha_image img').attr('src');
+    });
+    console.log("captchaSrc = "+captchaSrc)
+    return captchaSrc;
+}
+
+
+TwitterAccountCreator.prototype.loadSignup = function(callback) {
+    this.pageBefore();
+    this.page.open(URL_SIGNUP, callback);
+}
+
+
+TwitterAccountCreator.prototype.run = function(callback) {
+    // Pass useraccount
+    //this.user_account = account ? account : this.user_account;
+
+    var par = this;
+
+    // Now load signup page
+    var loadSignup = function() {
+        console.log("Loading signup")
+        par.loadSignup(twitterSignupPageLoaded);
+    }
+    
+    var twitterSignupPageLoaded = function() {
+            var captchaSrc = null;
+            captchaSrc = par.extractCaptchaURL();
+
+            if (!captchaSrc) {
+                console.log('No Captcha!!!!');
+                fillOutPage(par.page,par.userAccount);
+
+            }
+            else {
+                solveCaptchaURL(captchaSrc);
+            }
+    }
+
+
+    var solveCaptchaURL = function(captcha_url) {
+      var url = "http://ifnseo.com:9999/dbc/solve_url?url=" + captcha_url;
+     
+      console.log('Solve url: ' + url);
+        par.newFetcher = new mfetcherreg.Fetcher();
+        par.newFetcher.buildPage();
+        par.newpage = par.newFetcher.page;
+
+        par.newpage.open(url, dbcResponse);
+    }
+
+    var fillOutPage = function(page,user) {
+        console.log('here first: ' + page);
+       var theUri = mutils.getURI(page);
+        console.log('here second');
+
+       var baseuriprof = null; 
+
+        var response = page.evaluate(function(user) {
+            $('input.email-input').val(user.email);
+            $('div.password input').val(user.password);
+            $('div.username input').val(user.username);
+            $('div.name input').val(user.fullname);
+
+           $('div.sign-up-box input').click();
+        },
+           JSON.stringify(par.userAccount) );
+      
+         page.onLoadFinished = null;
+        mutils.waitFor( function() {
+            var baseuriprof = page.evaluate(function () {
+               $('div.sign-up-box input').click();
+               console.log(document.baseURI);
+                return [document.baseURI,$('#recaptcha_image').length];
+               });
+            return (baseuriprof[0] != theUri) || baseuriprof[1] > 0 }, delayTheLast, 10000, 1000);
+    };
+
+    var dbcResponse = function() {
+        par.newpage.injectJs('web_js/jquery.js');
+        var jsonString = par.newpage.evaluate(function() {
+            return $('pre').text();
+        });
+       
+        console.log(par.newpage.content);
+        console.log("This is JSON: " + jsonString);
+        var captchaResponse = JSON.parse(jsonString);
+       
+        // MAY BE NULL! FIX THIS
+        enterCaptcha(captchaResponse.data.text);
+    }
+
+    var solveCaptcha = function(captcha_url) {
+        console.log("Solving captcha =  "+captcha_url);
+        var solver = new msolver.DBCSolver();
+        solver.solveURL(captcha_url, function(answer){
+            console.log("ANSWER = "+answer);
+            captcha_result = answer;
+            enterCaptcha(captcha_result);
+        });
+    }
+   
+    var fillCaptcha = function(captcha_result) {
+           var theUri = mutils.getURI(par.page);
+
+            par.injectJquery();
+            //Have the Captcha
+            par.page.evaluate(function(param) {
+                $('#recaptcha_response_field').val(param);
+                   $('div.sign-up-box input').click();
+            }, '"' + decodeURIComponent(captcha_result.replace('\+',' ')) + '"');
+            
+            console.log('par in fill is ' + par);
+
+            mutils.waitForWithParam( function(newpar) {
+                var baseuriprof = newpar.page.evaluate(function () {
+                   $('div.sign-up-box input').click();
+                    return document.baseURI;
+                   });
+                return (baseuriprof != theUri)}, par, delayTheLast, 10000, 1000);
+        }
+    
+    var enterCaptcha = function(captcha_result) {
+        console.log("CAPTCHA = "+captcha_result);
+        fillCaptcha(captcha_result);
+        //par.fillFormSubmit();
+    }
+    
+    var delayTheLast = function() {
+        mutils.spinFor(nextThing,3000);
+    }
+
+    var delayThePage = function() {
+        mutils.spinFor(yahooSignUpPageLoaded,3000);
+    }
+
+    var nextThing = function() {
+            par.page.render('/var/www/html/fewdalism.com/phantomjs/newbeg.png');
+            par.injectJquery();
+            var errormsg = par.page.evaluate(function () {
+                return $('#recaptcha_image').length;
+            });
+           
+            if (errormsg) // It has a recaptcha, so let's fill it out
+                twitterRecaptchaSolver();
+            else{
+                console.log('Made it!');
+                console.log(JSON.stringify(par.userAccount));
+                phantom.exit();}
+        }
+
+    var isCaptchaSuccessful = function() {
+        var msg = par.captchaErrorMsg();
+
+        if (msg && msg.length > 0) {
+            console.log('Wait for captcha: ' + msg);
+
+            waitForCaptcha();
+        }
+        else {
+            console.log('going to the end!!');
+            finalize();
+        }
+
+    }
+
+// This loads after the SignUp page has loaded
+// This is where you would enter name, information for new account
+// May or may not have Captcha
+
+var twitterRecaptchaSolver  = function() {
+                            par.injectJquery();
+                            // Isolate the Captcha from Yahoo for analyzing
+                            var captchaSrc = null;
+                            captchaSrc = par.extractCaptchaURL();
+                            if (!captchaSrc) {
+                                return;
+                            }
+                            solveCaptchaURL(captchaSrc);
+                        }
+    
+    var finalize = function() {
+        // Sucess
+       var url = 'http://ifnseo.com:8088/yahoo/add?jsondata=' + encodeURIComponent(JSON.stringify(par.user_account)); 
+           console.log(url);
+        require('webpage').create().open(url, theEnd);
+    }
+
+    var theEnd = function(success) {
+        if (success)
+            console.log('Success');
+        else
+            console.log('Failure');
+
+    }
+    
+    var doCallback = function() {
+        var value = par.failed ? null : par.user_account;
+        callback(value);
+        return null;
+    }
+
+
+    loadSignup();
+}
+
+var exports = exports || {};
+// Exports
+exports.TwitterAccountCreator = TwitterAccountCreator
+
+console.log('Beginning!');
+
+var cool = new TwitterAccountCreator();
 
 // Print usage message, if no address is passed
 if (system.args.length < 5) {
@@ -22,259 +264,10 @@ if (system.args.length < 5) {
     phantom.exit(1);
 } else {
     //address = Array.prototype.slice.call(system.args, 1).join(' ');
-    userAccount.email = system.args[1]; 
-    userAccount.password = system.args[2]; 
-    userAccount.fullname = system.args[3]; 
-    userAccount.username = system.args[4]; 
-    randomInteger = Math.floor( Math.random() * 1000000000);
+    cool.userAccount.email = system.args[1]; 
+    cool.userAccount.password = system.args[2]; 
+    cool.userAccount.fullname = system.args[3]; 
+    cool.userAccount.username = system.args[4]; 
 }
-
-
-var screenshot = function(page,file) {
-  page.render('/var/www/html/fewdalism.com/phantomjs/'+file+'.png');
-};
-
-var done = false;
-// Fills out the signup page
-var fillOutPage = function(page,user) {
-    if (DEBUG_MODE)
-        console.log('fillOutPage----------------');
-   var theUri = page.evaluate(function () {
-       return document.baseURI; 
-   });
-   var baseuriprof = null; 
-
-    var response = page.evaluate(function(user) {
-        $('input.email-input').val(user.email);
-        $('div.password input').val(user.password);
-        $('div.username input').val(user.username);
-        $('div.name input').val(user.fullname);
-
-       // #captchaV5ClassicCaptchaImg
-       // #captchaV5Answer
-       $('div.sign-up-box input').click();
-    },
-       JSON.stringify(userAccount) );
-  
-    page.render('/var/www/html/fewdalism.com/phantomjs/screen_profile.png');
-     page.onLoadFinished = null;
-    waitFor( function() {
-        if (DEBUG_MODE)
-        console.log('The current uri: ' +theUri);
-        baseuriprof = page.evaluate(function () {
-            // Monitoring
-           $('div.sign-up-box input').click();
-           console.log(document.baseURI);
-            return [document.baseURI,$('#recaptcha_image').length];
-           });
-        screenshot(page,'testingthis');
-        return (baseuriprof[0] != theUri) || baseuriprof[1] > 0 }, delayTheLast, 10000, 1000);
-};
-
-var nextThing = function() {
-    if (DEBUG_MODE)
-        require('fs').write('/var/www/html/fewdalism.com/phantomjs/test.html',page.content,'w'); 
-        screenshot(page,'urichanged');
-        page.injectJs('jquery.js');
-        var errormsg = page.evaluate(function () {
-            return $('#recaptcha_image').length;
-        });
-       
-        if (errormsg) // It has a recaptcha, so let's fill it out
-            twitterRecaptchaSolver();
-        else{
-            console.log(JSON.stringify(userAccount));
-            phantom.exit();}
-    }
-
-var dbcQuery = null;
-var dbcPoll = null;
-var dbcPage = null;
-var baseuril = null;
-var href = null;
-
-
-
-var delayTheLast = function() {
-    if (DEBUG_MODE)
-    console.log('Delaying!');
-    spinFor(nextThing,3000);
-}
-
-var delayThePage = function() {
-    if (DEBUG_MODE)
-    console.log('Delaying!');
-    spinFor(yahooSignUpPageLoaded,3000);
-}
-// This loads after the SignUp page has loaded
-// This is where you would enter name, information for new account
-// May or may not have Captcha
-var twitterSignupPageLoaded = function() {
-    if (DEBUG_MODE)
-        console.log('twitterSignupPageLoaded----------------');
-                            page.injectJs('jquery.js');
-                            // Isolate the Captcha from Yahoo for analyzing
-                           var captchaPage = require('webpage').create();
-                            captchaPage.setProxyAuth(proxy.u+':'+proxy.p);
-                            captchaPage.setProxy(proxy.ip+':'+proxy.port);
-                            captchaPage.applyProxy();
-                            var captchaSrc = null;
-                            captchaSrc = page.evaluate(function() {
-                                                           return $('#recaptcha_image img').attr('src');
-                                                       });
-                            if (DEBUG_MODE)
-                            console.log('Captcha src: ' + captchaSrc);
-                            if (!captchaSrc) {
-                                if (DEBUG_MODE)
-                                console.log('No Captcha!!!!');
-                                fillOutPage(page,userAccount);
-                                return;
-                            }
-                            captchaPage.onLoadFinished = function (success) {
-                                // NECESSARY!!! Render out the Captcha to a file
-                                captchaPage.render(pathToTemp + '/captcha-'+randomInteger+'.png');
-                                // Create new webpage for Death By Captcha
-                                dbcPage = require('webpage').create();
-                                baseuri = dbcPage.evaluate(function(){ return document.baseURI; });
-                                dbcPage.injectJs('jquery.js');
-                                dbcPage.injectJs('dbc_form.js');
-                                dbcPage.uploadFile('#dbc_file',pathToTemp + '/captcha-'+randomInteger+'.png');
-                                dbcPage.evaluate(function() {
-                                    $('#dbc_username').val('coding.solo');
-                                    $('#dbc_password').val('colonel1');
-                                    $('form').submit();    
-                                });
-
-                                waitFor(function () {
-                                    // Wait until Death By Captcha changes our baseURI to reflect the post redirect
-                                    var dbcRes = dbcPage.evaluate(function(){ return document.baseURI; });
-                                    return dbcRes != baseuri;
-                                }, dbcAPIResponse,10000);
-                           };
-
-                           captchaPage.open(captchaSrc);
-                        }
-
-var twitterRecaptchaSolver  = function() {
-    if (DEBUG_MODE)
-        console.log('twitterRecaptchaSolver----------------');
-                            page.injectJs('jquery.js');
-                            // Isolate the Captcha from Yahoo for analyzing
-                           var captchaPage = require('webpage').create();
-                            captchaPage.setProxyAuth(proxy.u+':'+proxy.p);
-                            captchaPage.setProxy(proxy.ip+':'+proxy.port);
-                            captchaPage.applyProxy();
-                            var captchaSrc = null;
-                            captchaSrc = page.evaluate(function() {
-                                                           return $('#recaptcha_image img').attr('src');
-                                                       });
-                            if (DEBUG_MODE)
-                            console.log('Captcha src: ' + captchaSrc);
-                            if (!captchaSrc) {
-                                if (DEBUG_MODE)
-                                console.log('No Captcha!!!!');
-                                return;
-                            }
-                            captchaPage.onLoadFinished = function (success) {
-                                // NECESSARY!!! Render out the Captcha to a file
-                                captchaPage.render(pathToTemp + '/captcha-'+randomInteger+'.png');
-                                // Create new webpage for Death By Captcha
-                                dbcPage = require('webpage').create();
-                                baseuri = dbcPage.evaluate(function(){ return document.baseURI; });
-                                dbcPage.injectJs('jquery.js');
-                                dbcPage.injectJs('dbc_form.js');
-                                dbcPage.uploadFile('#dbc_file',pathToTemp + '/captcha-'+randomInteger+'.png');
-                                dbcPage.evaluate(function() {
-                                    $('#dbc_username').val('coding.solo');
-                                    $('#dbc_password').val('colonel1');
-                                    $('form').submit();    
-                                });
-
-                                waitFor(function () {
-                                    // Wait until Death By Captcha changes our baseURI to reflect the post redirect
-                                    var dbcRes = dbcPage.evaluate(function(){ return document.baseURI; });
-                                    return dbcRes != baseuri;
-                                }, dbcAPIResponse,10000);
-                           };
-
-                           captchaPage.open(captchaSrc);
-                        }
-var dbcAPIResponse = function() {
-                                    // Ok, Death By Captcha has returned us a query string to poll for results
-                                    dbcPage.injectJs('jquery.js');
-                                    dbcPoll = dbcPage.evaluate(function() { return document.baseURI; });
-                                    dbcQuery = dbcPage.evaluate(function() { return $('pre').text(); });
-                                    // DEBUG ONLY
-                                    // dbcPage.render('/var/www/html/fewdalism.com/phantomjs/dbc.png');
-                                    if (DEBUG_MODE)
-                                    console.log("DBC QUERY: " +dbcQuery);
-                                    if (DEBUG_MODE)
-                                    console.log("DBC POLL: " +dbcPoll);
-                                    var captchaTest = require('webpage').create();
-                                    var captcha = null;
-                                    // Now poll Death By Captcha for the result
-                                    waitFor(function() {
-                                        captchaTest.onLoadFinished = function() {
-                                            captchaTest.injectJs('jquery.js');
-                                            dbcQuery = captchaTest.evaluate(function() { return $('pre').text(); });
-                                            var re = /text=(.*)\&/;
-                                            captcha = re.exec(dbcQuery)[1];
-                                        };
-
-                                        captchaTest.open(dbcPoll);
-                                            return (captcha ? captcha.length > 0 : false); 
-
-                                        },
-                                        function() {
-                                           var theUri = page.evaluate(function () {
-                                                   return document.baseURI; 
-                                               });
-                                            //Have the Captcha
-                                            if (DEBUG_MODE)
-                                            console.log("Captcha is " + captcha);
-                                            //phantom.exit();
-                                            page.evaluate(function(param) {
-                                                $('#recaptcha_response_field').val(param);
-                                                   $('div.sign-up-box input').click();
-                                            }, '"' + decodeURIComponent(captcha.replace('\+',' ')) + '"');
-                                           // fillOutPage(page,userAccount);
-                                            if (DEBUG_MODE)
-                                            console.log('Did it with: ' + decodeURIComponent(captcha.replace('\+',' ')));
-                                            waitFor( function() {
-                                                if (DEBUG_MODE)
-                                                console.log('The current uri: ' +theUri);
-                                                baseuriprof = page.evaluate(function () {
-                                                    // Monitoring again
-                                                   $('div.sign-up-box input').click();
-                                                   console.log(document.baseURI);
-                                                    return [document.baseURI,$('#recaptcha_response_field').val()];
-                                                   });
-                                                screenshot(page,'testingthis-1');
-                                                return (baseuriprof[0] != theUri)}, delayTheLast, 10000, 1000);
-                                            
-                                        },
-                                        60000,
-                                        3000);
-
-
-}
-
-// This is the __main__
-page.onLoadFinished = function (status) {
-    // Check for page load success
-    if (status !== "success") {
-        console.log("Unable to access network for first");
-        phantom.exit(1);
-    } else {
-        page.injectJs('jquery.js');
-            waitFor(function() {
-                // Check in the page if a specific element is now visible
-                var res = page.evaluate(function(param) {
-                        return $('div.signup-wrapper').length > 0; 
-                });
-                return res;
-            }, twitterSignupPageLoaded, 10000);        
-        //phantom.exit();
-    }
-};
-page.open(encodeURI(theUrl));
+console.log('Trying');
+cool.run();
