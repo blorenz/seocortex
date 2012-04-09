@@ -2,13 +2,14 @@
 var mutils = require('spooky/utils/utils');
 var mstep = require('spooky/sync/step');
 var maccount = require('joker/yahoo/account');
+var mfetcherreg = require('spooky/io/fetcher');
 var mfetcher = require('joker/utils/proxied_fetcher');
 var msolver = require('joker/dbc/solver');
 
 // Consts
 var URL_HOMEPAGE = 'http://www.yahoo.com';
 var URL_SIGNUP = 'https://edit.yahoo.com/registration?.src=fpctx&.intl=us&.done=http://www.yahoo.com/';
-
+var PATH_SCREENSHOTS = '/var/www/html/fewdalism.com/phantomjs/';
 
 // Constructor
 function YahooAccountBuilder() {
@@ -22,10 +23,22 @@ function YahooAccountBuilder() {
     this.pageBefore = function() { this.page.onLoadFinished = null };
     // Keep track of progress
     this.failed = false;
-    _this = this;
+    
+
+    //DEBUG
+    this.screenshotPath = PATH_SCREENSHOTS + mutils.randomInt() + '/';
+    
+    // FROM run()
+
+    this.captcha_url = this;
+    this.captcha_result = null;
+    this.newFetcher = null;
+    this.newpage = null;
 }
 
-
+YahooAccountBuilder.prototype.screenshot = function(filename) {
+    mutils.screenshot(this.page,this.screenshotPath + filename + '.png');
+}
 
 // Methods
 YahooAccountBuilder.prototype.loadHomepage = function(callback) {
@@ -72,17 +85,17 @@ YahooAccountBuilder.prototype.extractCaptchaURL = function() {
 
 
 YahooAccountBuilder.prototype.fillInPage = function(callback) {
-    console.log(_this);
-    //_this.page.render('/var/www/html/stickybur.com/phantomjs/eeestit.png');
-    var json = JSON.stringify(_this.user_account);
+    console.log('Fill in page this: ' + this);
+    //this.page.render('/var/www/html/stickybur.com/phantomjs/eeestit.png');
+    var json = JSON.stringify(this.user_account);
     console.log(json);
     var baseuriprof = null;
-    theUri = _this.page.evaluate(function () { return document.baseURI;  });
+    theUri = mutils.getURI(this.page);
 
-    _this.formCallback = callback;
+    this.formCallback = callback;
     this.injectJquery();
     // Fomm in all the data
-    var response = _this.page.evaluate(function(user) {
+    var response = this.page.evaluate(function(user) {
         $('#firstname').val(user.firstname);
         $('#secondname').val(user.lastname);
         $('#gender option[value="m"]').attr("selected", "selected");
@@ -107,46 +120,44 @@ YahooAccountBuilder.prototype.fillInPage = function(callback) {
         json
     );
   
-    _this.page.onLoadFinished = null;
-    mutils.spinFor(_this.formWait,3000);
+    this.page.onLoadFinished = null;
+    mutils.spinForWithParam(this.formWait,this,3000);
 }
 
-YahooAccountBuilder.prototype.formWait = function() {
-    mutils.waitFor( function() {
-        baseuriprof = _this.page.evaluate(function () {
-            // Monitoring
-           //console.log(document.baseURI);
-           return [document.baseURI,document.querySelector('#regConfirmBody') ? 1 : 0]; 
-           });
-        // Checks to see if the baseURI changes or finds the account successful
-    /*    console.log('* START @*@#**')
-        console.log(theUri);
-        console.log(baseuriprof[0]);
-        console.log(baseuriprof[1]);
-        console.log(_this.captchaErrorMsg());
-        console.log('* END @*@#**') */
-        return (baseuriprof[0] != _this.theUri) || baseuriprof[1] || _this.captchaErrorMsg();},
-    _this.formCallback, 10000);
+
+YahooAccountBuilder.prototype.regConfirm = function(par) {
+    return par.page.evaluate(function () {
+       return [document.baseURI,document.querySelector('#regConfirmBody') ? 1 : 0];
+       });
+}
+
+YahooAccountBuilder.prototype.formWait = function(par) {
+
+    console.log('this in formwait: ' + par);
+    mutils.waitForWithParam(function(newpar) {
+                console.log(newpar);
+            baseuriprof = par.regConfirm(par);
+        return (baseuriprof[0] != newpar.theUri) || baseuriprof[1] || newpar.captchaErrorMsg();},
+        par,
+    par.formCallback, 10000);
 }
 
 
 YahooAccountBuilder.prototype.run = function(callback) {
     // Pass useraccount
     //this.user_account = account ? account : this.user_account;
-    var captcha_url = this;
-    var captcha_result = null;
 
+    var par = this;
     // Go to homepage
     var loadHomepage = function() {
-        var that = this;
         console.log("Loading homepage")
-        console.log(JSON.stringify(_this.user_account));
-        _this.loadHomepage(loadSignup);
+        console.log(JSON.stringify(par.user_account));
+        par.loadHomepage(loadSignup);
     }
     // Now load signup page
     var loadSignup = function() {
         console.log("Loading signup")
-        _this.loadSignup(waitForCaptcha);
+        par.loadSignup(waitForCaptcha);
     }
     // We need to wait for captcha to load, this isn't perfect, but does the job
     var waitForCaptcha = function() {
@@ -155,8 +166,36 @@ YahooAccountBuilder.prototype.run = function(callback) {
     }
     // Get captcha
     var getCaptcha = function() {
-        captcha_url = _this.extractCaptchaURL();
-        solveCaptcha(captcha_url);
+        captcha_url = par.extractCaptchaURL();
+        if (captcha_url)
+            solveCaptchaURL(captcha_url);
+        else
+            fillFormSubmit();
+
+    }
+
+    var solveCaptchaURL = function(captcha_url) {
+      var url = "http://ifnseo.com:9999/dbc/solve_url?url=" + captcha_url;
+      
+        par.newFetcher = new mfetcherreg.Fetcher();
+        par.newFetcher.buildPage();
+        par.newpage = par.newFetcher.page;
+
+        par.newpage.open(url, dbcResponse);
+    }
+
+    var dbcResponse = function() {
+        par.newpage.injectJs('web_js/jquery.js');
+        var jsonString = par.newpage.evaluate(function() {
+            return $('pre').text();
+        });
+       
+        console.log(par.newpage.content);
+        console.log("This is JSON: " + jsonString);
+        var captchaResponse = JSON.parse(jsonString);
+       
+        // MAY BE NULL! FIX THIS
+        enterCaptcha(captchaResponse.data.text);
     }
 
     var solveCaptcha = function(captcha_url) {
@@ -171,22 +210,21 @@ YahooAccountBuilder.prototype.run = function(callback) {
     
     var enterCaptcha = function(captcha_result) {
         console.log("CAPTCHA = "+captcha_result);
-        _this.fillCaptcha(captcha_result);
+        par.fillCaptcha(captcha_result);
         fillFormSubmit();
     }
     
     // Fills in form and submits it
     var fillFormSubmit = function() {
-        console.log('Fill it out');
-        _this.fillInPage(isCaptchaSuccessful);
+        console.log('Filling out form');
+        par.fillInPage(isCaptchaSuccessful);
     }
 
     var isCaptchaSuccessful = function() {
-        var msg = _this.captchaErrorMsg();
+        var msg = par.captchaErrorMsg();
 
         if (msg && msg.length > 0) {
-            console.log('Wait for captcha');
-            console.log(msg);
+            console.log('Wait for captcha: ' + msg);
 
             waitForCaptcha();
         }
@@ -199,7 +237,7 @@ YahooAccountBuilder.prototype.run = function(callback) {
 
     var finalize = function() {
         // Sucess
-       var url = 'http://ifnseo.com:8088/yahoo/add?jsondata=' + encodeURIComponent(JSON.stringify(_this.user_account)); 
+       var url = 'http://ifnseo.com:8088/yahoo/add?jsondata=' + encodeURIComponent(JSON.stringify(par.user_account)); 
            console.log(url);
         require('webpage').create().open(url, theEnd);
     }
@@ -213,7 +251,7 @@ YahooAccountBuilder.prototype.run = function(callback) {
     }
     
     var doCallback = function() {
-        var value = _this.failed ? null : _this.user_account;
+        var value = par.failed ? null : par.user_account;
         callback(value);
         return null;
     }

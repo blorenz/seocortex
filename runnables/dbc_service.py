@@ -21,7 +21,7 @@ class OurCaptchaSolver(CaptchaSolver):
 
 # An example handler
 class DBCHandler(object):
-    HEADERS = {'Content-Type' : 'text/javascript'}
+    HEADERS = {'Content-Type' : 'application/json'}
 
 
     def _render(self, request, method, kwargs):
@@ -35,7 +35,7 @@ class DBCHandler(object):
 
             data = json.dumps(response)
             request.send_reply_chunk(data)
-            print("Sent !")
+            print("RESPONSE = %s" % response)
             request.send_reply_end()
 
         request.send_reply_start(200, 'OK')
