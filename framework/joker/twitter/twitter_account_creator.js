@@ -192,7 +192,7 @@ TwitterAccountCreator.prototype.run = function(callback) {
                 twitterRecaptchaSolver();
             else{
                 console.log('Made it!');
-                par.page.render('/var/www/html/fewdalism.com/phantomjs/newbeg.png');
+                //par.page.render('/var/www/html/fewdalism.com/phantomjs/newbeg.png');
                 console.log(JSON.stringify(par.userAccount));
                 phantom.exit();}
         }
