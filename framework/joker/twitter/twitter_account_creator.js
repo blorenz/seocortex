@@ -1,4 +1,3 @@
-console.log('Starting!');
 // Includes
 var mutils = require('spooky/utils/utils');
 var mfetcherreg = require('spooky/io/fetcher');
@@ -57,11 +56,19 @@ TwitterAccountCreator.prototype.loadSignup = function(callback) {
 }
 
 
+TwitterAccountCreator.prototype.validateAccountInfo = function() {
+    if (this.userAccount.username.length > 15)
+        this.userAccount.username = this.userAccount.username.slice(this.userAccount.username.length - 15, this.userAccount.username.length);
+
+}
+
 TwitterAccountCreator.prototype.run = function(callback) {
     // Pass useraccount
     //this.user_account = account ? account : this.user_account;
 
     var par = this;
+
+    this.validateAccountInfo();
 
     // Now load signup page
     var loadSignup = function() {
@@ -98,7 +105,6 @@ TwitterAccountCreator.prototype.run = function(callback) {
     var fillOutPage = function(page,user) {
         console.log('here first: ' + page);
        var theUri = mutils.getURI(page);
-        console.log('here second');
 
        var baseuriprof = null; 
 
@@ -178,9 +184,6 @@ TwitterAccountCreator.prototype.run = function(callback) {
         mutils.spinFor(nextThing,3000);
     }
 
-    var delayThePage = function() {
-        mutils.spinFor(yahooSignUpPageLoaded,3000);
-    }
 
     var nextThing = function() {
             par.injectJquery();
@@ -192,25 +195,10 @@ TwitterAccountCreator.prototype.run = function(callback) {
                 twitterRecaptchaSolver();
             else{
                 console.log('Made it!');
-                //par.page.render('/var/www/html/fewdalism.com/phantomjs/newbeg.png');
+                par.page.render('/var/www/html/fewdalism.com/phantomjs/newbeg.png');
                 console.log(JSON.stringify(par.userAccount));
-                phantom.exit();}
         }
-
-    var isCaptchaSuccessful = function() {
-        var msg = par.captchaErrorMsg();
-
-        if (msg && msg.length > 0) {
-            console.log('Wait for captcha: ' + msg);
-
-            waitForCaptcha();
-        }
-        else {
-            console.log('going to the end!!');
-            finalize();
-        }
-
-    }
+ }
 
 // This loads after the SignUp page has loaded
 // This is where you would enter name, information for new account

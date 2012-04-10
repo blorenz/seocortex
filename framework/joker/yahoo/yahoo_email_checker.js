@@ -12,7 +12,7 @@ var PATH_SCREENSHOTS = '/var/www/html/fewdalism.com/phantomjs/';
 var URL_LOGIN = 'https://login.yahoo.com/config/login_verify2?.intl=us&.src=ym';
 
 // Constructor
-function YahooEmailChecker(user_account) {
+function YahooEmailChecker(mode,user_account) {
     // Automagically proxied requests
     this.fetcher = new mfetcher.ProxiedFetcher();
     this.fetcher.buildPage();
@@ -23,11 +23,12 @@ function YahooEmailChecker(user_account) {
     // Keep track of progress
     this.failed = false;
     this.userAccount = user_account ? user_account : new Object();
-    
 
     //DEBUG
     this.screenshotPath = PATH_SCREENSHOTS + mutils.randomInt() + '/';
-    
+    this.twitterActivationLink = null;
+
+    this.mode = mode ? mode : 'activate-twitter';
     // FROM run()
 }
 
@@ -50,6 +51,35 @@ YahooEmailChecker.prototype.loadLogin = function(callback) {
     this.page.open(URL_LOGIN, callback);
 }
 
+YahooEmailChecker.prototype.checkPinterest = function() {
+    this.mailCenterLoaded();
+
+    this.screenshot('boolio');
+
+    //require('fs').write('/var/www/html/fewdalism.com/phantomjs/test.html',this.page.content,'w'); 
+
+    var hasPinterest = this.page.evaluate(function() {
+        var emails = $('.list-view-items div.flex :nth-child(2)');
+        var twitterEmail = null;
+        for (email = 0; email < emails.length; email++) {
+            if (/Pinterest/.test($(emails[email]).text())) {
+               return true; 
+            }
+        }
+        return false;
+    });
+   
+    if (!hasPinterest) {
+        console.log('No Pinterest found');
+        return false;
+    }
+    else {
+        console.log('Pinterest was found!!!');
+        return true;
+    }
+    
+}
+
 YahooEmailChecker.prototype.doTwitterActivation = function() {
      
     // Initiliaze it
@@ -68,6 +98,7 @@ YahooEmailChecker.prototype.doTwitterActivation = function() {
     });
    
     if (!hasTwitterActivation) {
+        this.screenshot('no-twitter-found');
         console.log('No Twitter found');
         return false;
     }
@@ -83,15 +114,28 @@ YahooEmailChecker.prototype.doTwitterActivation = function() {
         return [$(twitterEmail).offset().left,$(twitterEmail).offset().top];
     });
     this.page.sendEvent('click',el[0],el[1]);
-    mutils.spinFor(activateTwitter,3000);
+    return true;
 }
 
 YahooEmailChecker.prototype.activateTwitter = function() {
-    var ret = this.page.evaluate(function() {
+    this.twitterActivationLink = this.page.evaluate(function() {
         return $('div.message.content iframe:visible').contents().find('html p a').html();
     });
-    console.log(ret);
+    console.log(this.twitterActivationLink);
+
+    //Open Twitter and log in
+    //and activate
 };
+
+YahooEmailChecker.prototype.logInToTwitter = function(account) {
+    this.injectJquery();
+    var ret = this.page.evaluate(function (user) {
+        $('#page-container .email-input').val(user.username);
+        $('#page-container .js-password-field').val(user.password);
+        }, account);
+
+    mutils.clickOnPage(this.page,'#page-container .submit');
+}
 
 YahooEmailChecker.prototype.mailCenterLoaded = function() {
     console.log('mailcenter');
@@ -138,14 +182,39 @@ YahooEmailChecker.prototype.run = function(callback) {
     var delayThePage = function() {
         console.log('Delaying the Page!');
         par.page.onLoadFinished = null;
-        console.log(par);
-        mutils.spinFor(doTwitterActivation,3000);
+       
+        var modeFunc = null;
+
+        switch (par.mode) {
+
+            case 'activate-twitter': modeFunc = doTwitterActivation;
+                                     break;
+            
+            case 'check-pinterest': modeFunc = checkPinterest;
+                                     break;
+            
+            default: modeFunc = doTwitterActivation;
+                     break;
+        }
+
+        mutils.spinFor(modeFunc,3000);
+
+
+        //mutils.spinFor(doTwitterActivation,3000);
+    }
+
+    var checkPinterest = function() {
+        par.checkPinterest();
     }
 
     var doTwitterActivation = function() {
-        par.doTwitterActivation();
+        if (par.doTwitterActivation())
+            mutils.spinFor(activateTwitter,3000);
     }
 
+    var activateTwitter = function() {
+        par.activateTwitter();
+    }
 
 
     
@@ -179,26 +248,5 @@ var exports = exports || {};
 // Exports
 exports.YahooEmailChecker = YahooEmailChecker;
 
-// Print usage message, if no address is passed
-if (system.args.length < 3) {
-    console.log("Usage: yahoo_email_creator.js [username] [password]");
-    phantom.exit(1);
-} else {
-    //address = Array.prototype.slice.call(system.args, 1).join(' ');
-    username = system.args[1];
-    password = system.args[2];
-}
-
-var userAccount = {
-    username: username,
-    password: password
-};
-
-var testyab = new YahooEmailChecker();
-testyab.userAccount = {
-    username: username,
-    password: password
-};
-testyab.run();
 
 
