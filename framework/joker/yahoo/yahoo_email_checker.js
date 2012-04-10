@@ -27,6 +27,7 @@ function YahooEmailChecker(mode,user_account) {
     //DEBUG
     this.screenshotPath = PATH_SCREENSHOTS + mutils.randomInt() + '/';
     this.twitterActivationLink = null;
+    this.twitterAccountInfo = null;
 
     this.mode = mode ? mode : 'activate-twitter';
     // FROM run()
@@ -127,14 +128,35 @@ YahooEmailChecker.prototype.activateTwitter = function() {
     //and activate
 };
 
-YahooEmailChecker.prototype.logInToTwitter = function(account) {
-    this.injectJquery();
-    var ret = this.page.evaluate(function (user) {
-        $('#page-container .email-input').val(user.username);
-        $('#page-container .js-password-field').val(user.password);
-        }, account);
+YahooEmailChecker.prototype.setTwitterAccount= function(account) {
+    this.twitterAccountInfo = account;
+}
 
-    mutils.clickOnPage(this.page,'#page-container .submit');
+YahooEmailChecker.prototype.logInToTwitter = function() {
+    this.injectJquery();
+    var json = JSON.stringify(this.twitterAccountInfo);
+    console.log(json);
+    var theReturn = this.page.evaluate(function (theUser) {
+        $('input.js-username-field').val(theUser.username);
+        $('input.js-password-field').val(theUser.password);
+        var offsets = $('.submit:nth-child(3)').offset();
+        //return document.baseURI; 
+        return [offsets.left,offsets.top];
+    },json);
+
+    /*var ret = this.page.evaluate(function (user) {
+        $('input.js-username-field').val(user.username);
+        $('input.js-password-field').val(user.password);
+        var offsets = $('.submit:first').offset();
+        return document.baseURI; 
+    //    return [offsets.left(),offsets.top()];
+        }, this.twitterAccountInfo);*/
+        require('fs').write('/var/www/html/fewdalism.com/phantomjs/twitterLog.html',this.page.content,'w'); 
+
+    this.screenshot('what-is-up');
+    console.log('after evaluate');
+    var selector = "#page-container .submit";
+    this.page.sendEvent('click',theReturn[0],theReturn[1]);
 }
 
 YahooEmailChecker.prototype.mailCenterLoaded = function() {
@@ -214,8 +236,20 @@ YahooEmailChecker.prototype.run = function(callback) {
 
     var activateTwitter = function() {
         par.activateTwitter();
+
+        par.page.open(par.twitterActivationLink, logInToTwitter);
     }
 
+    var logInToTwitter = function() {
+        par.page.onLoadFinished = null;
+        console.log('Time to open'); 
+        console.log(par.twitterAccountInfo.username);
+        mutils.spinFor(loginLoadedForTwitter, 5000);
+    }
+
+    var loginLoadedForTwitter = function() {
+        par.logInToTwitter();
+    }
 
     
 
