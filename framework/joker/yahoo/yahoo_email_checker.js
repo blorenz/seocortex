@@ -76,9 +76,19 @@ YahooEmailChecker.prototype.checkPinterest = function() {
     }
     else {
         console.log('Pinterest was found!!!');
-        return true;
     }
-    
+    var el = this.page.evaluate(function() {
+        var emails = $('.list-view-items div.flex :nth-child(2)');
+        var twitterEmail = null;
+        for (email = 0; email < emails.length; email++) {
+            if (/Pinterest/.test($(emails[email]).text())) {
+                twitterEmail = emails[email];
+            }
+        }
+        return [$(twitterEmail).offset().left,$(twitterEmail).offset().top];
+    });
+    this.page.sendEvent('click',el[0],el[1]);
+   return true; 
 }
 
 YahooEmailChecker.prototype.doTwitterActivation = function() {
@@ -117,6 +127,31 @@ YahooEmailChecker.prototype.doTwitterActivation = function() {
     this.page.sendEvent('click',el[0],el[1]);
     return true;
 }
+
+YahooEmailChecker.prototype.activatePinterest = function() {
+    this.screenshot('something-about-twitter');
+    this.twitterActivationLink = this.page.evaluate(function() {
+        return $('div.message.content iframe:visible').contents().find('html a:last').attr('href');
+    });
+    console.log(this.twitterActivationLink);
+    // Goes to pinterest page
+    // $('#SignUp p a:first')  for twitter
+    // On twitter page:
+    // $('#username_or_email')  and $('#password')  then $('#allow') is button x2
+    // $('#id_username') $('#id_email') $('#id_password') $('#CompleteSignupButton')
+    // Get some pins
+    // $('a.pin') $('a#welcome_follow_people')
+    //
+    // $('#to_board_create_button')
+    // 
+    // Boards -----
+    // $('#Boards li.entry')   'a.RemoveBoard')
+    // $('#BoardSuggestions li a')
+    // $('#Boards li input:last').val('This is awesome 2')
+    // $('#AddButton').click()
+    // $('#board_create_button').removeClass('disabled')
+    // $('#board_create_button').click()
+};
 
 YahooEmailChecker.prototype.activateTwitter = function() {
     this.twitterActivationLink = this.page.evaluate(function() {
@@ -226,7 +261,12 @@ YahooEmailChecker.prototype.run = function(callback) {
     }
 
     var checkPinterest = function() {
-        par.checkPinterest();
+        if (par.checkPinterest())
+            mutils.spinFor(activatePinterest, 3000);
+    }
+
+    var activatePinterest = function() {
+        par.activatePinterest();
     }
 
     var doTwitterActivation = function() {

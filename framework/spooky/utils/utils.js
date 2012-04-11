@@ -193,7 +193,7 @@ var screenshot = function(page,path) {
 }
 
 // Changes XML to JSON
-function xmlToJson(xml) {
+var xmlToJson = function(xml) {
     
     // Create the return object
     var obj = {};

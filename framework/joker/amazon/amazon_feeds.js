@@ -20,7 +20,6 @@ function AmazonFeedExtractor() {
     this.pageBefore = function() { this.page.onLoadFinished = null };
     // Keep track of progress
     this.failed = false;
-    this.userAccount = user_account ? user_account : new Object();
    
     this.feedContent = null;
 
@@ -30,13 +29,14 @@ function AmazonFeedExtractor() {
     // FROM run()
 }
 
-AmazonFeedExtractor.prototype.getFeed(keyword, type, callback) {
-
+AmazonFeedExtractor.prototype.getFeed = function(keyword, type, callback) {
+    console.log('going for it!');
     var url = this.getFeedURI(keyword, type);
+    console.log(url);
     this.page.open(url, callback);
 }
 
-AmazonFeedExtractor.prototype.getFeedURI(keyword, type) {
+AmazonFeedExtractor.prototype.getFeedURI = function(keyword, type) {
 
     var fragment = null;
     switch (type) {
@@ -54,8 +54,10 @@ AmazonFeedExtractor.prototype.getFeedURI(keyword, type) {
     return URL_FEED_BASE + keyword + fragment + theLength;
 }
 
-AmazonFeedExtractor.prototype.getJSON(xml) {
+AmazonFeedExtractor.prototype.getJSON = function(xml) {
 
+    console.log('getting it');
+    console.log(xml);
     return mutils.xmlToJson(xml);
 }
 
@@ -77,49 +79,12 @@ AmazonFeedExtractor.prototype.run = function(callback) {
     //this.user_account = account ? account : this.user_account;
 
     var par = this;
-    // Go to homepage
-    var loadLogin = function() {
-        console.log("Loading homepage")
-        console.log(JSON.stringify(par.user_account));
-        par.loadLogin(yahooLoginPageLoaded);
+
+    
+    var nextIt = function() {
+        console.log('here now!');
+        console.log(par.getJSON(par.page.content));
     }
-
-    var yahooLoginPageLoaded = function() {
-                par.injectJquery();
-                var loginuri = mutils.getURI(par.page); 
-
-                var href = par.page.evaluate(function(user) {
-                        $('#username').val(user.username); 
-                        $('#passwd').val(user.password); 
-                        $('#submit button').click();
-                }, JSON.stringify(par.userAccount));
-                
-                mutils.waitForWithParam(function(newpar) {
-                    // Check in the page if a specific element is now visible
-                    var pageuri = mutils.getURI(newpar.page);
-                    //console.log(loginuri);
-                    //console.log(pageuri);
-                    return loginuri != pageuri;
-                }, par, delayThePage, 10000);        
-        
-    };
-
-    var delayThePage = function() {
-        console.log('Delaying the Page!');
-        par.page.onLoadFinished = null;
-        console.log(par);
-        mutils.spinFor(doTwitterActivation,3000);
-    }
-
-    var doTwitterActivation = function() {
-        if (par.doTwitterActivation())
-            mutils.spinFor(activateTwitter,3000);
-    }
-
-    var activateTwitter = function() {
-        par.activateTwitter();
-    }
-
 
     
 
@@ -144,13 +109,16 @@ AmazonFeedExtractor.prototype.run = function(callback) {
         return null;
     }
 
+    console.log('Try it please');
 
-    loadLogin();
+    par.getFeed('vacuums',0, nextIt);
+
 }
 
 var exports = exports || {};
 // Exports
 exports.AmazonFeedExtractor = AmazonFeedExtractor;
 
-
-
+console.log('gonna start');
+var afe = new AmazonFeedExtractor();
+afe.run();
