@@ -3,7 +3,7 @@ mserver =  require('spooky/server/server')
 mviews = require('spooky/views/base')
 
 // Change this later
-myahoo = require('joker/yahoo/yahoo_email_creator')
+myahoo = require('joker/yahoo/email_creator')
 mtwitter = require('joker/twitter/twitter_account_creator')
 
 // Constructor

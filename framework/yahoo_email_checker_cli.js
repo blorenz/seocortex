@@ -1,4 +1,4 @@
-var myahoo = require('joker/yahoo/yahoo_email_checker');
+var myahoo = require('joker/yahoo/email_checker');
 
 var system = require('system');
 

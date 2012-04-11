@@ -1,5 +1,5 @@
 // Includes
-var myahoo_email_creator = require('joker/yahoo/yahoo_email_creator')
+var myahoo_email_creator = require('joker/yahoo/email_creator')
 
     
 var checkMode = function(mode) {
