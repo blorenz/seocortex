@@ -14,13 +14,18 @@ var YahooEmailChecker = function(mode,user_account) {
 YahooEmailChecker.prototype = new YahooBase();
 
 
-YahooEmailChecker.prototype.checkPinterest = function() {
-    this.mailCenterLoaded();
+YahooEmailChecker.prototype.checkPinterest = function(spam) {
 
+    var whatbox = 'mainbox';
+    if (!spam)
+        this.mailCenterLoaded();
+    else {
+        this.spamCenterLoaded();
+        whatbox = 'spam';
+    }
 
     var hasPinterest = this.page.evaluate(function() {
         var emails = $('.list-view-items div.flex :nth-child(2)');
-        var twitterEmail = null;
         for (email = 0; email < emails.length; email++) {
             if (/Pinterest/.test($(emails[email]).text())) {
                return true; 
@@ -28,14 +33,23 @@ YahooEmailChecker.prototype.checkPinterest = function() {
         }
         return false;
     });
+    this.screenshot('inbox-' + whatbox);
    
     if (!hasPinterest) {
-        console.log('No Pinterest found');
+        console.log('No Pinterest found in ' + whatbox);
         return false;
     }
     else {
-        console.log('Pinterest was found!!!');
+        console.log('Pinterest was found in ' + whatbox + '!!!');
+        return true;
     }
+
+   return true; 
+}
+
+YahooEmailChecker.prototype.clickPinterestEmail = function () {
+    var twitterEmail = null;
+
     var el = this.page.evaluate(function() {
         var emails = $('.list-view-items div.flex :nth-child(2)');
         var twitterEmail = null;
@@ -47,8 +61,7 @@ YahooEmailChecker.prototype.checkPinterest = function() {
         return [$(twitterEmail).offset().left,$(twitterEmail).offset().top];
     });
     this.page.sendEvent('click',el[0],el[1]);
-   return true; 
-}
+};
 
 YahooEmailChecker.prototype.doTwitterActivation = function() {
      
@@ -87,6 +100,7 @@ YahooEmailChecker.prototype.doTwitterActivation = function() {
 }
 
 YahooEmailChecker.prototype.activatePinterest = function() {
+    console.log('Activation!!!!');
     this.twitterActivationLink = this.page.evaluate(function() {
         return $('div.message.content iframe:visible').contents().find('html a:last').attr('href');
     });
@@ -155,9 +169,15 @@ YahooEmailChecker.prototype.mailCenterLoaded = function() {
 
     // Click on Inbox
    var selector = "#tabinbox b";
-   console.log(this.page);
    mutils.clickOnPage(this.page,selector);
 };
+
+YahooEmailChecker.prototype.spamCenterLoaded = function() {
+    this.injectJquery();
+
+    var selector = "#system-folders .spam";
+    mutils.clickOnPage(this.page,selector);
+}
 
 YahooEmailChecker.prototype.run = function(callback) {
     // Pass useraccount
@@ -216,11 +236,26 @@ YahooEmailChecker.prototype.run = function(callback) {
     }
 
     var checkPinterest = function() {
-        if (par.checkPinterest())
+        if (par.checkPinterest()) {
+            par.clickPinterestEmail();
             mutils.spinFor(activatePinterest, 3000);
+        }
+        else {
+            par.spamCenterLoaded();
+            mutils.spinFor(checkPinterestSpam, 3000);
+        }
+    }
+
+    var checkPinterestSpam = function() {
+        if (par.checkPinterest(true)) {
+            par.clickPinterestEmail();
+            mutils.spinFor(activatePinterest, 3000);
+        }
+
     }
 
     var activatePinterest = function() {
+        console.log('Let us activate');
         par.activatePinterest();
     }
 

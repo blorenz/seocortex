@@ -1,26 +1,41 @@
-var mutils = require('spooky/utils/utils');
+phantom.injectJs('joker/pinterest/base.js');
 
+var PinterestAccountCreator = function(mode,user_account) {
+    YahooBase.apply(this);
 
-
-var page = require('webpage').create(),
-    system = require('system');
-
-// Route "console.log()" calls from within the Page context to the main Phantom context (i.e. current "this")
-page.onConsoleMessage = function(msg) {
-    console.log(msg);
-};
-
-// Print usage message, if no address is passed
-if (system.args.length < 4) {
-    console.log("Usage: pinterest_createaccount.js [username] [email] [password]");
-    phantom.exit(1);
-} else {
-    //address = Array.prototype.slice.call(system.args, 1).join(' ');
-    username = system.args[2];
-    password = system.args[3];
-    profilename = system.args[1];
+    // YahooEmailChecker specifics
+    this.userAccount = user_account ? user_account : new Object();
+    this.twitterActivationLink = null;
+    this.twitterAccountInfo = null;
 }
 
+PinterestAccountCreator.prototype = new PinterestBase();
+
+
+PinterestAccountCreator.prototype.run = function() {
+
+     
+    // Goes to pinterest page
+    // $('#SignUp p a:first')  for twitter  HARD CLICK
+    // On twitter page:
+    // $('#username_or_email')  and $('#password')  then $('#allow') is button x2 (actually did it in 1)
+    // $('#id_username') $('#id_email') $('#id_password') $('#CompleteSignupButton').removeClass('disabled')
+    // Get some pins
+    // $('a.pin') $('a#welcome_follow_people')
+    //
+    // $('#to_board_create_button')
+    // 
+    // Boards -----
+    // $('#Boards li.entry')   'a.RemoveBoard')
+    // $('#BoardSuggestions li a')
+    // $('#Boards li input:last').val('This is awesome 2')
+    // $('#AddButton').click()
+    // $('#board_create_button').removeClass('disabled')
+    // $('#board_create_button').click()
+    //
+    // $('a.BigButton.BlueButton') HARD CLICK
+
+}
 
 var login = function (page,l,p,u) {
     // Here is the magic! new evaluate param takes a secondary argument.  ideally a JSON object, but a string for this purpose
@@ -37,7 +52,6 @@ var login = function (page,l,p,u) {
   //page.render('/var/www/html/fewdalism.com/phantomjs/screen2.png');
 };
 
-var theUrl = 'http://www.pinterest.com/login';
 
 var userAccount = {
                     login: username,
