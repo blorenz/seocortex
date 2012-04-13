@@ -13,10 +13,25 @@ PinterestAccountCreator.prototype = new PinterestBase();
 
 
 PinterestAccountCreator.prototype.run = function() {
+   
+    var par = this;
 
-     
-    // Goes to pinterest page
-    // $('#SignUp p a:first')  for twitter  HARD CLICK
+    var openPinterestInvite = function() {
+        par.page.open(par.inviteLink, chooseTwitter);
+    }
+
+// Should be at the Invite page.  Should assert?
+    var chooseTwitter = function() {
+        // $('#SignUp p a:first')  for twitter  HARD CLICK
+       mutils.clickOnPage(par.page, '#SignUp p a:first');
+       par.waitForPageToChange(twitterLoaded);
+    }
+
+    var twitterLoaded = function() {
+
+
+    }
+
     // On twitter page:
     // $('#username_or_email')  and $('#password')  then $('#allow') is button x2 (actually did it in 1)
     // $('#id_username') $('#id_email') $('#id_password') $('#CompleteSignupButton').removeClass('disabled')
@@ -37,20 +52,6 @@ PinterestAccountCreator.prototype.run = function() {
 
 }
 
-var login = function (page,l,p,u) {
-    // Here is the magic! new evaluate param takes a secondary argument.  ideally a JSON object, but a string for this purpose
-    ret = page.evaluate( function(param) {
-            eval(param);
-          $('#id_password').val(user.password);
-          $('#id_email').val(user.name);
-          $('#id_username').val(user.profilename);
-          $('form.CompleteAccount').submit();
-        },'user={name:"'+l+'",password:"'+p+'",username:"'+u+'"}');
-//
-////
-//  Verify here!!!!!  Verify here!!!!!  Verify here!!!!!  Verify here!!!!!  Verify here!!!!!
-  //page.render('/var/www/html/fewdalism.com/phantomjs/screen2.png');
-};
 
 
 var userAccount = {

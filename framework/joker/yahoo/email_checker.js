@@ -33,7 +33,7 @@ YahooEmailChecker.prototype.checkPinterest = function(spam) {
         }
         return false;
     });
-    this.screenshot('inbox-' + whatbox);
+    //this.screenshot('inbox-' + whatbox);
    
     if (!hasPinterest) {
         console.log('No Pinterest found in ' + whatbox);

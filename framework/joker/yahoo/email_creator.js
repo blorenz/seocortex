@@ -49,7 +49,35 @@ YahooAccountBuilder.prototype.fillInPage = function(callback) {
     this.formCallback = callback;
     this.injectJquery();
     // Fomm in all the data
-    var response = this.page.evaluate(function(user) {
+
+    var user = this.user_account;
+
+    var userSelects = {
+        gender:'#gender option[value="m"]',
+        birthdaygroup:'#birthdategroup option[value="'+user.birthmonth+'"]',
+        country:'#country option[value="us"]',
+        language:'#language option[value="en-US"]',
+        sec1:'#secquestion option[value="Where did you meet your spouse?"]',
+        sec2:'#secquestion2 option[value="Where did you spend your childhood summers?"]',
+        langA:'#language option[value="en-US"]',
+    };
+
+    var userObject = { '#firstname':user.firstname,
+        '#secondname':user.lastname,
+        '#dd':user.birthday,
+        '#yyyy':user.birthyear,
+        '#postalcode':user.postalcode,
+        '#yahooid':user.yahooid,
+        '#password':user.password,
+        '#passwordconfirm':user.password,
+        '#secquestionanswer':user.secret1,
+        '#secquestionanswer2':user.secret2,
+    } ;
+
+    mutils.populateTextInputs(this.page,userObject);
+    mutils.populateSelectInputs(this.page,userSelects);
+
+/*    var response = this.page.evaluate(function(user) {
         $('#firstname').val(user.firstname);
         $('#secondname').val(user.lastname);
         $('#gender option[value="m"]').attr("selected", "selected");
@@ -73,7 +101,12 @@ YahooAccountBuilder.prototype.fillInPage = function(callback) {
     },
         json
     );
-  
+ */
+
+    var response = this.page.evaluate( function() {
+        $('#IAgreeBtn').click();
+    });
+
     this.page.onLoadFinished = null;
     mutils.spinForWithParam(this.formWait,this,3000);
 }

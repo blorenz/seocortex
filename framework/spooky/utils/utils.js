@@ -104,6 +104,23 @@ function spinFor(onReady, timeOutMillis, hammerTime) {
 };
 
 
+var populateTextInputs = function(page, map) {
+    console.log('Go go!');
+    console.log(JSON.stringify(map));
+   page.evaluate( function(map) {
+       for ( var key in map ) {
+           $(key).val(map[key]);
+       }
+   },JSON.stringify(map));
+}
+
+var populateSelectInputs = function(page, map) {
+    page.evaluate ( function(map) {
+        for (var key in map) {
+        $(map[key]).attr("selected", "selected");
+        }
+    }, JSON.stringify(map));
+}
 
 // Return an int
 var randomInt = function(maxInt) {
@@ -244,4 +261,5 @@ exports.parseURL = parseURL
 exports.getURI = getURI
 exports.screenshot = screenshot
 exports.xmlToJson = xmlToJson
-
+exports.populateTextInputs = populateTextInputs
+exports.populateSelectInputs = populateSelectInputs
