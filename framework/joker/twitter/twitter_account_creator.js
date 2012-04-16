@@ -219,7 +219,7 @@ TwitterAccountCreator.prototype.run = function(callback) {
     
     var finalize = function() {
         // Sucess
-       var url = 'http://ifnseo.com:8088/twitter/add?profile_id='+par.seocortex_profile_id+'&jsondata=' + encodeURIComponent(JSON.stringify(par.user_account)); 
+       var url = 'http://ifnseo.com:8088/twitter/add?profile_id='+par.seocortex_profile_id+'&jsondata=' + encodeURIComponent(JSON.stringify(par.userAccount));
            console.log(url);
         require('webpage').create().open(url, theEnd);
     }
@@ -245,3 +245,4 @@ TwitterAccountCreator.prototype.run = function(callback) {
 var exports = exports || {};
 // Exports
 exports.TwitterAccountCreator = TwitterAccountCreator
+

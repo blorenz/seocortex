@@ -12,10 +12,10 @@ class AmazonFeedExtractor(object):
         self.items = []
 
 
-    def get_feed(self, keyword, qtype = None, limit = 20):
+    def get_feed(self, *args, **kwargs):
         url = self.get_feed_uri(*args, **kwargs)
         data = urllib2.urlopen(url).read()
-        return self.parse(data)[:limit]
+        return self.parse(data)
 
 
     def get_feed_uri(self, keyword, qtype = None, limit = 20):
