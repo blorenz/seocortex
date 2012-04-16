@@ -161,6 +161,7 @@ YahooEmailChecker.prototype.logInToTwitter = function() {
     console.log('after evaluate');
     var selector = "#page-container .submit";
     this.page.sendEvent('click',theReturn[0],theReturn[1]);
+    console.log('finished');
 }
 
 YahooEmailChecker.prototype.mailCenterLoaded = function() {

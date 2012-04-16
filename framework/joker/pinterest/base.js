@@ -10,7 +10,7 @@ var msolver = require('joker/dbc/solver');
 var URL_HOMEPAGE = 'http://www.pinterest.com';
 var PATH_SCREENSHOTS = '/var/www/html/fewdalism.com/phantomjs/';
 var URL_LOGIN = 'https://pinterest.com/login/?next=%2F'; 
-var URL_INVITE = 'http://pinterest.com/invites/';
+var URL_INVITE = 'http://pinterest.com/invites/email/';
 
 // Constructor
 var PinterestBase = function() {

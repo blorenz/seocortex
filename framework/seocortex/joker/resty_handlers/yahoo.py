@@ -1,8 +1,6 @@
 # Python imports
 import json
-
-# Django imports
-from django.core import serializers
+import datetime
 
 # Yahoo imports
 from seocortex.joker.common.models import JokerProfile

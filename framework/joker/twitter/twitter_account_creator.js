@@ -13,13 +13,14 @@ var system = require('system');
 var URL_SIGNUP = 'http://www.twitter.com/signup';
 var DEBUG_MODE = true;
 
-function TwitterAccountCreator(user_account) {
+function TwitterAccountCreator(seo_id,user_account) {
     this.fetcher = new mfetcher.ProxiedFetcher();
     this.fetcher.buildPage();
     this.page = this.fetcher.page;
     this.page.viewportSize = { width: 1080, height: 1000 };
     this.pageBefore = function() { this.page.onLoadFinished = null };
-    
+   
+    this.seocortex_profile_id = seo_id;
     this.userAccount = user_account ? user_account : new Object();
     
     this.captcha_url = this;
@@ -195,8 +196,9 @@ TwitterAccountCreator.prototype.run = function(callback) {
                 twitterRecaptchaSolver();
             else{
                 console.log('Made it!');
-                par.page.render('/var/www/html/fewdalism.com/phantomjs/newbeg.png');
+    //            par.page.render('/var/www/html/fewdalism.com/phantomjs/newbeg.png');
                 console.log(JSON.stringify(par.userAccount));
+                finalize();
         }
  }
 
@@ -204,7 +206,7 @@ TwitterAccountCreator.prototype.run = function(callback) {
 // This is where you would enter name, information for new account
 // May or may not have Captcha
 
-var twitterRecaptchaSolver  = function() {
+    var twitterRecaptchaSolver  = function() {
                             par.injectJquery();
                             // Isolate the Captcha from Yahoo for analyzing
                             var captchaSrc = null;
@@ -217,7 +219,7 @@ var twitterRecaptchaSolver  = function() {
     
     var finalize = function() {
         // Sucess
-       var url = 'http://ifnseo.com:8088/yahoo/add?jsondata=' + encodeURIComponent(JSON.stringify(par.user_account)); 
+       var url = 'http://ifnseo.com:8088/twitter/add?profile_id='+par.seocortex_profile_id+'&jsondata=' + encodeURIComponent(JSON.stringify(par.user_account)); 
            console.log(url);
         require('webpage').create().open(url, theEnd);
     }

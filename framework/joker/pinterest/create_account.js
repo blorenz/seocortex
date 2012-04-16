@@ -1,12 +1,11 @@
 phantom.injectJs('joker/pinterest/base.js');
 
-var PinterestAccountCreator = function(mode,user_account) {
+var PinterestAccountCreator = function(user_account) {
     YahooBase.apply(this);
 
     // YahooEmailChecker specifics
-    this.userAccount = user_account ? user_account : new Object();
-    this.twitterActivationLink = null;
-    this.twitterAccountInfo = null;
+    this.account = user_account ? user_account : new Object();
+    this.inviteLink = null;
 }
 
 PinterestAccountCreator.prototype = new PinterestBase();
@@ -16,28 +15,49 @@ PinterestAccountCreator.prototype.run = function() {
    
     var par = this;
 
-    var openPinterestInvite = function() {
+    var openPinterestInvite = function openPinterestInvite() {
         par.page.open(par.inviteLink, chooseTwitter);
     }
 
 // Should be at the Invite page.  Should assert?
-    var chooseTwitter = function() {
+    var chooseTwitter = function chooseTwitter() {
         // $('#SignUp p a:first')  for twitter  HARD CLICK
        mutils.clickOnPage(par.page, '#SignUp p a:first');
        par.waitForPageToChange(twitterLoaded);
     }
 
-    var twitterLoaded = function() {
-
-
+    var twitterLoaded = function twitterLoaded() {
+        var map = {
+        '#username_or_email': par.account.twittername,
+        '#password': par.account.twitterpassword,
+        };
+        mutils.populateTextInputs(par.page,map);
+        mutils.clickOnPage(par.page,'#allow');
     }
 
-    // On twitter page:
-    // $('#username_or_email')  and $('#password')  then $('#allow') is button x2 (actually did it in 1)
-    // $('#id_username') $('#id_email') $('#id_password') $('#CompleteSignupButton').removeClass('disabled')
-    // Get some pins
-    // $('a.pin') $('a#welcome_follow_people')
-    //
+
+    var pinterestEnterAccountInfo = function pinterestEnterAccountInfo() {
+        var map = {
+            '#id_username': par.account.pinterestusername,
+            '#id_email': par.account.pinterestemail,
+            '#id_password': par.account.pinterest_password,
+        };
+        mutils.populateTextInputs(par.page,map);
+        par.page.evaluate(function() { $('#CompleteSignupButton').removeClass('disabled'); });
+        mutils.clickOnPage(par.page, '#CompleteSignupButton');
+    }
+
+    var pinterestSelectPins = function pinterestSelectPin() {
+        par.page.evaluate(function() {
+            var nPins = $('a.pin').length;
+            var total = Math.random() * nPins + 1;
+            
+            for (var i = 0; i < total; i++) {
+                $('a.pin')[Math.random() * nPins].click();
+            }
+            $('a#welcome_follow_people').click();
+        });
+    }
     // $('#to_board_create_button')
     // 
     // Boards -----
