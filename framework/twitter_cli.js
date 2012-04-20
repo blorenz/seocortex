@@ -17,7 +17,7 @@ var afterLoad = function afterLoad() {
     }
     userAccount = { email: arr[0].accounts.yahoo.yahooid+'@yahoo.com', 
                          password: arr[0].accounts.yahoo.password,
-                         fullname: arr[0].accounts.yahoo.firstname + ' ' + arr[0].accounts.yahoo.lastname,
+                         name: arr[0].accounts.yahoo.firstname + ' ' + arr[0].accounts.yahoo.lastname,
                          username: arr[0].accounts.yahoo.yahooid 
     };
     twit = new mtwitt.TwitterAccountCreator(arr[0]._id,userAccount);

@@ -44,3 +44,15 @@ class YahooHandler(object):
             return json.dumps({"status" : "failed", "error" : unicode(e)})
 
         return json.dumps({"status" : "success"}) 
+
+
+    def delete(self, profile_id = None):
+        if not profile_id:
+            return json.dumps({"status" : "failed", "error" : "profile_id required"})
+        try:
+            jk = JokerProfile.objects.get(pk = profile_id)
+            jk.remove_account('yahoo')
+            jk.save()
+        except Exception as e:
+            return json.dumps({"status" : "failed", "error" : "Exception : %s" % e})
+        return json.dumps({"status" : "success"})

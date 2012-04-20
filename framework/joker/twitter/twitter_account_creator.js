@@ -60,6 +60,7 @@ TwitterAccountCreator.prototype.loadSignup = function(callback) {
 TwitterAccountCreator.prototype.validateAccountInfo = function() {
     if (this.userAccount.username.length > 15)
         this.userAccount.username = this.userAccount.username.slice(this.userAccount.username.length - 15, this.userAccount.username.length);
+    this.userAccount.username.replace(".","");
 
 }
 
@@ -113,7 +114,7 @@ TwitterAccountCreator.prototype.run = function(callback) {
             $('input.email-input').val(user.email);
             $('div.password input').val(user.password);
             $('div.username input').val(user.username);
-            $('div.name input').val(user.fullname);
+            $('div.name input').val(user.name);
 
            $('div.sign-up-box input').click();
         },

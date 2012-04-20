@@ -46,3 +46,9 @@ class JokerProfile(models.Document, CleanDocumentMixin):
         else:
             return False
         return True
+
+    def remove_account(self, account_name):
+        if name in ('yahoo', 'twitter', 'pinterest'):
+            delattr(self.accounts, account_name)
+            return True
+        return False

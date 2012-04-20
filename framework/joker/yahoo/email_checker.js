@@ -1,12 +1,18 @@
+var mpinterest = require('joker/pinterest/create_account');
 phantom.injectJs('joker/yahoo/base.js');
+
 
 var YahooEmailChecker = function(mode,user_account) {
     YahooBase.apply(this);
 
     // YahooEmailChecker specifics
+    // TODO CHANGE THIS TO A SBP ID
     this.userAccount = user_account ? user_account : new Object();
     this.twitterActivationLink = null;
     this.twitterAccountInfo = null;
+    this.pinterestActivationLink = null;
+
+    this.pinterest = null;
 
     this.mode = mode ? mode : 'activate-twitter';
 }
@@ -101,10 +107,11 @@ YahooEmailChecker.prototype.doTwitterActivation = function() {
 
 YahooEmailChecker.prototype.activatePinterest = function() {
     console.log('Activation!!!!');
-    this.twitterActivationLink = this.page.evaluate(function() {
-        return $('div.message.content iframe:visible').contents().find('html a:last').attr('href');
+    this.pinterestActivationLink = this.page.evaluate(function() {
+        return $($('div.message.content iframe:visible').contents().find('div.msg-body a')[2]).attr('href');
     });
-    console.log(this.twitterActivationLink);
+    console.log(this.pinterestActivationLink);
+    return this.pinterestActivationLink;
     // Goes to pinterest page
     // $('#SignUp p a:first')  for twitter
     // On twitter page:
@@ -196,6 +203,7 @@ YahooEmailChecker.prototype.run = function(callback) {
                 par.injectJquery();
                 var loginuri = mutils.getURI(par.page); 
 
+                console.log(loginuri);
                 var href = par.page.evaluate(function(user) {
                         $('#username').val(user.username); 
                         $('#passwd').val(user.password); 
@@ -257,7 +265,10 @@ YahooEmailChecker.prototype.run = function(callback) {
 
     var activatePinterest = function() {
         console.log('Let us activate');
-        par.activatePinterest();
+       var userAccount = { twitter: { username: par.userAccount.username, password: par.userAccount.password },                                                                            pinterest: { username: par.userAccount.username, password: par.userAccount.password, email: par.userAccount.email } }; 
+       console.log(JSON.stringify(userAccount));
+       this.pinterest = new mpinterest.PinterestAccountCreator(par.activatePinterest(),  userAccount);
+       this.pinterest.run();
     }
 
     var doTwitterActivation = function() {
@@ -314,4 +325,4 @@ var exports = exports || {};
 exports.YahooEmailChecker = YahooEmailChecker;
 
 
-
+console.log('done');

@@ -1,8 +1,6 @@
 # Python imports
 import json
-
-# Django imports
-from django.core import serializers
+import random
 
 # Yahoo imports
 from seocortex.joker.common.models import JokerProfile
@@ -40,21 +38,27 @@ class JokerProfileHandler(object):
         return self.get_by_account(twitter = twitter, yahoo = 'true', amount = amount)
 
 
-    def get_by_id(self, id):
-        result= []
-        try:
-            jk = JokerProfile.objects.get(id = obj_id)
-            result = to_dict(jk)
-        except:
-            pass
+    def detail(self, **kwargs):
+        obj_id = kwargs.get('id', None)
+        result= None
+        if obj_id:
+            try:
+                jk = JokerProfile.objects.get(pk = obj_id)
+                result = to_dict(jk)
+            except:
+                pass
         return json.dumps(result)
 
 
-    def get_by_account(self, twitter = False, yahoo = False, amount = None):
+    def get_by_account(self, twitter = False, yahoo = False, amount = None, skip = 0):
         try:
             amount = int(amount)
         except:
-            pass
+            amount = None
+        try:
+            skip = int(skip)
+        except:
+            skip = None
         twitter = True if twitter == 'true' else False
         yahoo = True if yahoo == 'true' else False
 
@@ -63,8 +67,21 @@ class JokerProfileHandler(object):
             jks = jks.filter(accounts__twitter__exists = twitter)
         if yahoo:
             jks = jks.filter(accounts__yahoo__exists = yahoo)
+        if not skip is None and not amount is None:
+            jks = jks[skip:skip+amount]
+        elif not skip is None:
+            jks = jks[skip:]
+        elif not amount is None:
+            jks = jks[:amount]
 
-        jks = list(jks[:amount])
+        jks = list(jks)
         final_jks = [to_dict(jk) for jk in jks]
         return json.dumps(final_jks)
 
+
+    def random(self, **kwargs):
+        maxi = JokerProfile.objects.count()
+        skip = random.randint(0, maxi - 1)
+        kwargs.setdefault('skip', skip)
+        kwargs.setdefault('amount', 1)
+        return self.get_by_account(**kwargs)

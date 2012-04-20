@@ -14,6 +14,7 @@ if (system.args.length < 3) {
     password = system.args[3];
     twitterUsername = system.args[4];
     twitterPassword = system.args[5];
+    console.log('ok');
 }
 
 var userAccount = {
@@ -24,7 +25,8 @@ var userAccount = {
 var testyab = new myahoo.YahooEmailChecker(mode);
 testyab.userAccount = {
     username: username,
-    password: password
+    password: password,
+    email: username + "@yahoo.com"
 };
 testyab.setTwitterAccount({ username: twitterUsername, password: twitterPassword});
 testyab.run();

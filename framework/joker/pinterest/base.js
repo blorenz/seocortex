@@ -37,7 +37,9 @@ var PinterestBase = function() {
     this.newpage = null;
 }
 
+
 PinterestBase.prototype.screenshot = function(filename) {
+    console.log('done screen');
     mutils.screenshot(this.page,this.screenshotPath + filename + '.png');
 }
 
@@ -65,7 +67,6 @@ PinterestBase.prototype.setCurrentURI = function() {
 }
 
 PinterestBase.prototype.waitForPageToChange = function(callback) {
-    this.setCurrentURI();
     mutils.waitForWithParam( function(param) {
         return document.baseURI != param;
     }, this.currentURI, callback, 10000); 
