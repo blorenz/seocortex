@@ -30,8 +30,6 @@ class HttpRequest(object):
 
         # Add some
         self.META['REMOTE_ADDR'] = self.raw_request.remote
-        self.META['REMOTE_ADDR'] = self.raw_request.remote
-        self.META['REMOTE_ADDR'] = self.raw_request.remote
 
 
     def parse_url(self):

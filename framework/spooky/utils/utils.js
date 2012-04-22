@@ -201,6 +201,15 @@ var clickOnPage = function(page,selector) {
    page.sendEvent('click',el[0],el[1]);
 };
 
+var typeOnPage = function(page,input, selector) {
+   var el = page.evaluate(function(sel) {
+               var offset = $(sel).offset(); 
+               return [offset.left,offset.top];
+   }, JSON.stringify(selector));
+   page.sendEvent('click',el[0],el[1]);
+   page.sendEvent('type',input,null);
+};
+
 var getURI = function(page) {
     return page.evaluate(function () { return document.baseURI;  });
 };
@@ -218,6 +227,7 @@ exports.spinFor = spinFor
 exports.randomInt = randomInt
 exports.randomString = randomString
 exports.clickOnPage = clickOnPage
+exports.typeOnPage = typeOnPage
 exports.parseQS = parseQS
 exports.parseURL = parseURL
 exports.getURI = getURI
