@@ -32,6 +32,9 @@ var Base = function() {
     this.captcha_result = null;
     this.newFetcher = null;
     this.newpage = null;
+    this.page.onConsoleMessage = function(msg) {
+        console.log(msg);
+    };
 }
 
 
@@ -53,19 +56,33 @@ Base.prototype.loadSignup = function(callback) {
     this.page.open(URL_SIGNUP, callback);
 }
 
+Base.prototype.clickOnPage = function(selector) {
+    mutils.clickOnPage(this.page,selector);
+}
+
 Base.prototype.loadLogin = function(callback) {
     this.pageBefore();
     this.page.open(URL_LOGIN, callback);
 }
 
 Base.prototype.setCurrentURI = function() {
+    //console.log('before: ' + this.currentURI);
     this.currentURI = mutils.getURI(this.page);
+    //console.log('after: ' + this.currentURI);
 }
+
+Base.prototype.resetPageLoad = function() {
+    this.page.onLoadFinished = null;
+
+};
 
 Base.prototype.waitForPageToChange = function(callback) {
     mutils.waitForWithParam( function(param) {
-        return document.location.href != param;
-    }, this.currentURI, callback, 10000); 
+        var href = param[0].evaluate( function () { return document.location.href; });
+        //console.log('here it is: ' + href);
+        //console.log('versus: ' + param[1]);
+        return href != param[1];
+    }, [this.page,this.currentURI], callback, 10000); 
 
 };
 

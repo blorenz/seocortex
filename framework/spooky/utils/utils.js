@@ -211,7 +211,7 @@ var typeOnPage = function(page,input, selector) {
 };
 
 var getURI = function(page) {
-    return page.evaluate(function () { return document.baseURI;  });
+    return page.evaluate(function () { return document.location.href;  });
 };
 
 var screenshot = function(page,path) {

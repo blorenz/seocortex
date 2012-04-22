@@ -1,8 +1,5 @@
 phantom.injectJs('joker/google/base.js');
 
-// Exports
-exports.GoogleAdwords = GoogleAdwords;
-
 var GoogleAdwords = function() {
     GoogleBase.apply(this);
 };
@@ -10,9 +7,20 @@ var GoogleAdwords = function() {
 GoogleAdwords.prototype = new GoogleBase();
 
 
-GoogleAwords.prototype.createAccount = function createAccount() {
+GoogleAdwords.prototype.createAccount = function createAccount(that) {
+    if (!that)  that = this;
 
-// $('#hasNoGoogleAccount').click();
+    that.resetPageLoad();
+    console.log('in create');
+    that.setCurrentURI();
+    that.injectJquery();
+    that.screenshot('trythisfirst');
+    that.page.evaluate(function() {$('a.g-button-red').click(); });
+
+//    that.clickOnPage('a.g-button-red');
+    that.waitForPageToChange(function() {that.login(that);});
+
+    //mutils.spinFor(function() {that.login(that);},10000);
 // $('iframe#newAccountLoginBox').contents().find('form#createaccount input:visible');  [0] email [1] & [2] password  [3] Captcha  [4] submit
 // $('iframe#newAccountLoginBox').contents().find('form#createaccount img')[0]
 
@@ -23,23 +31,22 @@ GoogleAwords.prototype.createAccount = function createAccount() {
 
 };
 
-GoogleAwords.prototype.createAccount = function createAccount() {
+GoogleAdwords.prototype.login = function login(that) {
+    if (!that)  that = this;
+    that.setCurrentURI();
 
+    that.screenshot('trythis');
+};
+
+GoogleAdwords.prototype.run = function run() {
+var par = this;
+    par.setCurrentURI();
+
+    par.page.open(URL_ADWORDS,function() {par.createAccount(par);});
 
 };
-GoogleAwords.prototype.login = function login() {
 
 
-};
-GoogleAwords.prototype.createAccount = function createAccount() {
+// Exports
+exports.GoogleAdwords = GoogleAdwords;
 
-
-};
-GoogleAwords.prototype.createAccount = function createAccount() {
-
-
-};
-GoogleAwords.prototype.createAccount = function createAccount() {
-
-
-};
