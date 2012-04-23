@@ -33,9 +33,22 @@ GoogleAdwords.prototype.createAccount = function createAccount(that) {
 
 GoogleAdwords.prototype.login = function login(that) {
     if (!that)  that = this;
+    that.resetPageLoad();
     that.setCurrentURI();
-
     that.screenshot('trythis');
+    that.injectJquery();
+    that.page.evaluate( function() {$('#hasNoGoogleAccount').click(); } );
+    //mutils.clickOnPage(that.page,'#hasNoGoogleAccount');
+
+    mutils.spinFor(function() {that.login2(that);},10000);
+};
+
+GoogleAdwords.prototype.login2 = function login2(that) {
+    if (!that)  that = this;
+    that.resetPageLoad();
+    console.log('done');
+    that.screenshot('trythis22');
+
 };
 
 GoogleAdwords.prototype.run = function run() {
